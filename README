@@ -9,4 +9,4 @@ git clone https://github.com/tloszabno/RedOctober.git
 RedOctober/activator run
 
 3. Go to your favourite browser and open (wait a minute to load page):
-http://localhost/9000
+http://localhost:9000
