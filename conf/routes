@@ -7,3 +7,11 @@ GET     /                           controllers.Application.index()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+# Connect the websocket for team playing
+GET     /join                       controllers.TeamActor.socket(name: String, team: String)
+
+# Render websocket test page
+GET     /test_websocket             controllers.Application.websocket()
+
+GET     /test_params                controllers.Application.testParameters(name: String, team: String)
