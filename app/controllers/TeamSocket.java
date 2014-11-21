@@ -2,15 +2,18 @@ package controllers;
 
 import java.util.LinkedList;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.UsersConnected;
 import play.libs.F;
 import play.libs.F.Callback0;
+import play.libs.Json;
 import play.mvc.WebSocket;
 
-public class TeamSocket extends WebSocket<String> {
+public class TeamSocket extends WebSocket<JsonNode> {
 
 	private UsersConnected list;
-	private play.mvc.WebSocket.Out<String> out=null;
+	private play.mvc.WebSocket.Out<JsonNode> out=null;
 
 	public TeamSocket(UsersConnected list) {
 		super();
@@ -18,13 +21,14 @@ public class TeamSocket extends WebSocket<String> {
 	}
 
 	@Override
-	public void onReady(final play.mvc.WebSocket.In<String> in,
-			final play.mvc.WebSocket.Out<String> out) {
+	public void onReady(final play.mvc.WebSocket.In<JsonNode> in,
+			final play.mvc.WebSocket.Out<JsonNode> out) {
 		// For each event received on the socket,
 		
-        in.onMessage(new F.Callback<String>() {
-            public void invoke(String event) {
+        in.onMessage(new F.Callback<JsonNode>() {
+            public void invoke(JsonNode event) {
                 //out.write("I accepted your message: "+event);
+
             	sendUsersToSocket(out);
             }
         });
@@ -47,11 +51,14 @@ public class TeamSocket extends WebSocket<String> {
 		}
 	}
 
-	private void sendUsersToSocket(play.mvc.WebSocket.Out<String> out) {
-		out.write("All users already connected:");
-        for (String name : list.usersAlready()){
-        	out.write(name);
-        }
+	private void sendUsersToSocket(play.mvc.WebSocket.Out<JsonNode> out) {
+        ObjectNode result = Json.newObject();
+        result.put("messageType", "log");
+        result.put("text", "All users already connected");
+
+        out.write(result);
+        out.write(Json.toJson(list.usersAlready()));
+
 	}
 
 }

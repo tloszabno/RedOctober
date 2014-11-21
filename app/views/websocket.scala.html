@@ -32,7 +32,7 @@
 
 	function onOpen(evt) {
 		writeToScreen("CONNECTED");
-		doSend("WebSocket rocks");
+		doSend(true); // currently accepts only true, false or null, otherwise exception is thrown, need to investigate
 	}
 
 	function onClose(evt) {

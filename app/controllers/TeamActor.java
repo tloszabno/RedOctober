@@ -5,7 +5,9 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import models.UsersConnected;
+import play.api.libs.json.JsValue;
 import play.mvc.Result;
 import play.mvc.WebSocket;
 import akka.actor.ActorRef;
@@ -44,7 +46,7 @@ public class TeamActor extends UntypedActor {
 	    //someResource.close();
 	}
 	
-	public static WebSocket<String> socket(String name, String team) {
+	public static WebSocket<JsonNode> socket(String name, String team) {
 		String user = name+":"+team;
 		System.out.println("connecting:" + user);
 		players.connectNew(user);
