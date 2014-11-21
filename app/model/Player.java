@@ -4,11 +4,13 @@ package model;
 public class Player {
 
 	private String nick;
+	private String team;
 	private double xPosition, yPosition;
 	private double xDirection, yDirection;
 	
-	public Player(String nick, double xPosition, double yPosition) {
+	public Player(String nick, String team, double xPosition, double yPosition) {
 		this.nick = nick;
+		this.team = team;
 		this.xPosition = xPosition;
 		this.yPosition = yPosition;
 	}
@@ -42,8 +44,18 @@ public class Player {
 		return nick;
 	}
 	
+	public String getTeam() {
+		return team;
+	}
+
+	public void setTeam(String team) {
+		this.team = team;
+	}
+	
 	public void move() {
 		xPosition += xDirection;
 		yPosition += yDirection;
 	}
+
+
 }
