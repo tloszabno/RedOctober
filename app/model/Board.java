@@ -14,28 +14,26 @@ public class Board {
 		players = new HashMap<String, Player>();
 	}
 
-	public boolean addPlayer(String nick, double xPosition, double yPosition) {
-		if (players.containsKey(nick)) {
+	public boolean addPlayer(Player player) {
+		if (players.containsKey(player.getNick())) {
 			return false;
 		}
 
-		Player newPlayer = new Player(nick, xPosition, yPosition);
-		players.put(nick, newPlayer);
+		players.put(player.getNick(), player);
 		return true;
 	}
 
-	public boolean removePlayer(String nick) {
-		if (!players.containsKey(nick)) {
+	public boolean removePlayer(Player player) {
+		if (!players.containsKey(player.getNick())) {
 			return false;
 		}
-		players.remove(nick);
+		players.remove(player.getNick());
 		return true;
 	}
 
-	public void changePlayerDirection(String nick, double xDirection,
+	public void changePlayerDirection(Player player, double xDirection,
 			double yDirection) { // nie wiem czy tu nie lepiej jakies delty
 									// przekazywac
-		Player player = players.get(nick);
 		player.setxDirection(xDirection);
 		player.setyDirection(yDirection);
 	}
