@@ -20,11 +20,11 @@ public class TeamActor extends UntypedActor {
 
     private final ActorRef out;
     private static final UsersConnected players;
-    private static final Map<TeamSocket, String> sockets;
+    private static final Map<TeamSocket, HashMap<String,String>> sockets;
     
     static {
         players = new UsersConnected();
-        sockets = new HashMap<TeamSocket, String>();
+        sockets = new HashMap<TeamSocket, HashMap<String,String>>();
     }
 
     public TeamActor(ActorRef out) {
@@ -46,8 +46,10 @@ public class TeamActor extends UntypedActor {
 	    //someResource.close();
 	}
 	
-	public static WebSocket<JsonNode> socket(String name, String team) {
-		String user = name+":"+team;
+	public static WebSocket<String> socket(String name, String team) {
+        HashMap<String,String> user = new HashMap<String,String>();
+        user.put("name", name);
+        user.put("team", team);
 		System.out.println("connecting:" + user);
 		players.connectNew(user);
 	    TeamSocket teamSocket = new TeamSocket(players);
@@ -57,7 +59,7 @@ public class TeamActor extends UntypedActor {
 	}
 
 	public static void disconnect(TeamSocket teamSocket) {
-		String user = sockets.get(teamSocket);
+        HashMap<String,String> user = sockets.get(teamSocket);
 		sockets.remove(teamSocket);
 		System.out.println("disconnecting:" + user);
 		players.disconnect(user);

@@ -1,25 +1,26 @@
 package models;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 public class UsersConnected {
-	private LinkedList<String> users;
+	private LinkedList<HashMap<String,String>> users;
 	
 	public UsersConnected() {
-		users = new LinkedList<String>();
+		users = new LinkedList<HashMap<String,String>>();
 	}
 	
-	public LinkedList<String> connectNew(String name){
-		users.add(name);
+	public LinkedList<HashMap<String,String>> connectNew(HashMap<String,String> user){
+		users.add(user);
 		return users;
 	}
 
-	public List<String> usersAlready() {
+	public List<HashMap<String,String>> usersAlready() {
 		return users;
 	}
 
-	public void disconnect(String user) {
+	public void disconnect(HashMap<String,String> user) {
 		users.remove(user);
 	}
 }
