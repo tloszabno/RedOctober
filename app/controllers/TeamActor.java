@@ -1,30 +1,27 @@
 package controllers;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.TreeMap;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import models.UsersConnected;
-import play.api.libs.json.JsValue;
-import play.mvc.Result;
+import model.Board;
+import model.Player;
+import model.PlayerRepository;
 import play.mvc.WebSocket;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
-import play.libs.F.*;
-import views.html.index;
 
 public class TeamActor extends UntypedActor {
 
     private final ActorRef out;
-    private static final UsersConnected players;
-    private static final Map<TeamSocket, HashMap<String,String>> sockets;
+    private static final PlayerRepository players;
+    private static final Map<TeamSocket, Player> sockets;
+    private static final Board board;
     
     static {
-        players = new UsersConnected();
-        sockets = new HashMap<TeamSocket, HashMap<String,String>>();
+        players = new PlayerRepository();
+        sockets = new HashMap<TeamSocket, Player>();
+        board = new Board();
     }
 
     public TeamActor(ActorRef out) {
@@ -47,22 +44,20 @@ public class TeamActor extends UntypedActor {
 	}
 	
 	public static WebSocket<String> socket(String name, String team) {
-        HashMap<String,String> user = new HashMap<String,String>();
-        user.put("name", name);
-        user.put("team", team);
-		System.out.println("connecting:" + user);
-		players.connectNew(user);
-	    TeamSocket teamSocket = new TeamSocket(players);
-		sockets.put(teamSocket, user);
+		Player player = new Player(name,team,board.getRandomX(),board.getRandomY());
+		System.out.println("connecting:" + player);
+		players.connectNewPlayer(player);
+	    TeamSocket teamSocket = new TeamSocket(players,board);
+		sockets.put(teamSocket, player);
 	    broadcast();
 		return teamSocket;
 	}
 
 	public static void disconnect(TeamSocket teamSocket) {
-        HashMap<String,String> user = sockets.get(teamSocket);
+		Player player = sockets.get(teamSocket);
 		sockets.remove(teamSocket);
-		System.out.println("disconnecting:" + user);
-		players.disconnect(user);
+		System.out.println("disconnecting:" + player);
+		players.disconnectPlayer(player);
 		broadcast();
 	}
 	
