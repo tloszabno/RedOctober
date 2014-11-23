@@ -47,7 +47,7 @@ public class TeamActor extends UntypedActor {
 		Player player = new Player(name,team,board.getRandomX(),board.getRandomY());
 		System.out.println("connecting:" + player);
 		players.connectNewPlayer(player);
-	    TeamSocket teamSocket = new TeamSocket(players,board);
+	    TeamSocket teamSocket = new TeamSocket(players,player,board);
 		sockets.put(teamSocket, player);
 	    broadcast();
 		return teamSocket;

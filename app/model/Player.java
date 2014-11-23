@@ -19,14 +19,14 @@ public class Player {
 		this.yPosition = yPosition;
 	}
 	
-	@JsonProperty("xPosition")
+	@JsonProperty("x")
 	public double getxPosition() {
 		return xPosition;
 	}
 	public void setxPosition(double xPosition) {
 		this.xPosition = xPosition;
 	}
-	@JsonProperty("yPosition")
+	@JsonProperty("y")
 	public double getyPosition() {
 		return yPosition;
 	}
@@ -48,7 +48,7 @@ public class Player {
 		this.yDirection = yDirection;
 	}
 
-	@JsonProperty("name")
+	@JsonProperty("user_nick")
 	public String getNick() {
 		return nick;
 	}
