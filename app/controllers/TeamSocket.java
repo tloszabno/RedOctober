@@ -1,24 +1,25 @@
 package controllers;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import models.UsersConnected;
+import model.Board;
+import model.PlayerRepository;
 import play.libs.F;
 import play.libs.F.Callback0;
 import play.libs.Json;
 import play.mvc.WebSocket;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 public class TeamSocket extends WebSocket<String> {
 
-	private UsersConnected list;
+	private PlayerRepository list;
 	private play.mvc.WebSocket.Out<String> out=null;
+	private Board board;
+	private boolean invitationSent = false; 
 
-	public TeamSocket(UsersConnected list) {
+	public TeamSocket(PlayerRepository players, Board board) {
 		super();
-		this.list = list;
+		this.list = players;
+		this.board = board;
 	}
 
 	@Override
@@ -45,6 +46,8 @@ public class TeamSocket extends WebSocket<String> {
 			}
 		});
         
+        
+        this.sendInitMsg(out, board);
         this.out = out;
 	}
 	
@@ -58,9 +61,18 @@ public class TeamSocket extends WebSocket<String> {
         ObjectNode result = Json.newObject();
         result.put("messageType", "log");
         result.put("text", "All users already connected");
-
         out.write(result.toString());
-        out.write(Json.toJson(list.usersAlready()).toString());
+        ObjectNode players = Json.newObject();
+        players.put("players", Json.toJson(list.getConnectedPlayers()));
+        out.write(players.toString());
+	}
+
+	private void sendInitMsg(play.mvc.WebSocket.Out<String> out, Board board) {
+		if (out != null){
+			ObjectNode result = Json.newObject();
+	        result.put("board", Json.toJson(board));
+			out.write(result.toString());
+		}
 	}
 
 }

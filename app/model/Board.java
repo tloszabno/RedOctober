@@ -3,6 +3,12 @@ package model;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@XmlRootElement
 public class Board {
 
 	private final double width = 1000.0;
@@ -42,6 +48,31 @@ public class Board {
 		for(Player player : players.values()) {
 			player.move();
 		}
+	}
+
+	@JsonProperty("width")
+	public double getWidth() {
+		return width;
+	}
+
+	@JsonProperty("height")
+	public double getHeight() {
+		return height;
+	}
+
+	@JsonProperty("playerRadius")
+	public double getPlayerRadius() {
+		return playerRadius;
+	}
+
+	@JsonIgnore
+	public double getRandomX() {
+		return Math.random()*getWidth();
+	}
+
+	@JsonIgnore
+	public double getRandomY() {
+		return Math.random()*getHeight();
 	}
 
 }
