@@ -50,12 +50,17 @@ public class Board {
 		}
 	}
 
-	@JsonProperty("width")
+	@JsonProperty("type")
+	public String getType(){
+		return "map_init_configuration";
+	}
+	
+	@JsonProperty("x_size")
 	public double getWidth() {
 		return width;
 	}
 
-	@JsonProperty("height")
+	@JsonProperty("y_size")
 	public double getHeight() {
 		return height;
 	}

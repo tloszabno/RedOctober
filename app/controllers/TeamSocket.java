@@ -1,6 +1,10 @@
 package controllers;
 
+import java.util.List;
+
 import model.Board;
+import model.FriendFilter;
+import model.Player;
 import model.PlayerRepository;
 import play.libs.F;
 import play.libs.F.Callback0;
@@ -14,12 +18,14 @@ public class TeamSocket extends WebSocket<String> {
 	private PlayerRepository list;
 	private play.mvc.WebSocket.Out<String> out=null;
 	private Board board;
-	private boolean invitationSent = false; 
+	private boolean invitationSent = false;
+	private Player my; 
 
-	public TeamSocket(PlayerRepository players, Board board) {
+	public TeamSocket(PlayerRepository players, Player associated, Board board) {
 		super();
 		this.list = players;
 		this.board = board;
+		this.my = associated;
 	}
 
 	@Override
@@ -62,16 +68,20 @@ public class TeamSocket extends WebSocket<String> {
         result.put("messageType", "log");
         result.put("text", "All users already connected");
         out.write(result.toString());
-        ObjectNode players = Json.newObject();
-        players.put("players", Json.toJson(list.getConnectedPlayers()));
-        out.write(players.toString());
+        List<Player> connectedPlayers = list.getConnectedPlayers();
+        FriendFilter filter = new FriendFilter(my, connectedPlayers);
+//      ObjectNode players = Json.newObject();
+//		players.put("players", Json.toJson(filter));
+//      out.write(players.toString());
+        out.write(Json.toJson(filter).toString());
 	}
 
 	private void sendInitMsg(play.mvc.WebSocket.Out<String> out, Board board) {
 		if (out != null){
-			ObjectNode result = Json.newObject();
-	        result.put("board", Json.toJson(board));
-			out.write(result.toString());
+//			ObjectNode result = Json.newObject();
+//	        result.put("board", Json.toJson(board));
+//			out.write(result.toString());
+			out.write(Json.toJson(board).toString());
 		}
 	}
 
