@@ -2,27 +2,25 @@ package controllers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import model.Board;
 import model.Player;
 import model.PlayerRepository;
 import play.mvc.WebSocket;
+import scala.concurrent.duration.Duration;
 import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
+import akka.actor.Inbox;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
 
 public class TeamActor extends UntypedActor {
 
-    private final ActorRef out;
-    private static final PlayerRepository players;
-    private static final Map<TeamSocket, Player> sockets;
-    private static final Board board;
-    
-    static {
-        players = new PlayerRepository();
-        sockets = new HashMap<TeamSocket, Player>();
-        board = new Board();
-    }
+	private final ActorRef out;
+	private static GameController game = new GameController();
 
     public TeamActor(ActorRef out) {
         this.out = out;
@@ -44,26 +42,13 @@ public class TeamActor extends UntypedActor {
 	}
 	
 	public static WebSocket<String> socket(String name, String team) {
-		Player player = new Player(name,team,board.getRandomX(),board.getRandomY());
+		Player player = new Player(name,team,game.getBoard().getRandomX(),game.getBoard().getRandomY());
 		System.out.println("connecting:" + player);
-		players.connectNewPlayer(player);
-	    TeamSocket teamSocket = new TeamSocket(players,player,board);
-		sockets.put(teamSocket, player);
-	    broadcast();
+		game.getPlayers().connectNewPlayer(player);
+	    TeamSocket teamSocket = new TeamSocket(game,player);
+		game.getSockets().put(teamSocket, player);
+	    game.broadcast();
 		return teamSocket;
 	}
 
-	public static void disconnect(TeamSocket teamSocket) {
-		Player player = sockets.get(teamSocket);
-		sockets.remove(teamSocket);
-		System.out.println("disconnecting:" + player);
-		players.disconnectPlayer(player);
-		broadcast();
-	}
-	
-	private static void broadcast(){
-		for (TeamSocket sock: sockets.keySet()){
-			sock.sendUsers();
-		}
-	}
 }

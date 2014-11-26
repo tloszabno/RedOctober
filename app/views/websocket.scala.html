@@ -3,9 +3,12 @@
 <script language="javascript" type="text/javascript">
 	var wsUri = "ws://localhost:9000/join";
 	var output;
+	var name;
+	var team;
 
 	var data;
 	var root;
+	var interval;
 
 	function init() {
 		output = document.getElementById("output");
@@ -13,8 +16,8 @@
 	}
 
 	function testWebSocket() {
-        var name = getParameterByName("name");
-        var team = getParameterByName("team");
+        name = getParameterByName("name");
+        team = getParameterByName("team");
 		websocket = new WebSocket(wsUri+"?name="+name+"&team="+team);
 		websocket.onopen = function(evt) {
 			onOpen(evt)
@@ -28,11 +31,12 @@
 		websocket.onerror = function(evt) {
 			onError(evt)
 		};
+		startTimer();
 	}
 
 	function onOpen(evt) {
 		writeToScreen("CONNECTED");
-        doSend({messageType:"log",text:"foobar"}); // currently accepts only true, false or null, otherwise exception is thrown, need to investigate
+        doSend({type:"log",text:"foobar"}); // currently accepts only true, false or null, otherwise exception is thrown, need to investigate
 	}
 
 	function onClose(evt) {
@@ -70,6 +74,27 @@
         var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
                 results = regex.exec(location.search);
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+    
+    function startTimer() {
+    	interval = window.setInterval(navTimer, 200);
+    }
+    
+    function stopTimer() {
+    	window.clearInterval(interval);
+    }
+    
+    function navTimer() {
+    	var dao = {
+    		    type: "navigation",
+    		    user_nick: name,
+    		    current_x: 1.0,
+    		    current_y: 1.0,
+    		    next_x: 2.0,
+    		    next_y: 1.0,
+    		    current_velocity: 1.0
+    		};
+    	doSend(dao);
     }
 </script>
 

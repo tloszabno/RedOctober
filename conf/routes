@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index()
+GET     /                           controllers.Application.websocket()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
@@ -13,5 +13,3 @@ GET     /join                       controllers.TeamActor.socket(name: String, t
 
 # Render websocket test page
 GET     /test_websocket             controllers.Application.websocket()
-
-GET     /test_params                controllers.Application.testParameters(name: String, team: String)
