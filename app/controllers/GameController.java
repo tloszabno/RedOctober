@@ -1,6 +1,7 @@
 package controllers;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -61,11 +62,11 @@ public class GameController {
 		}
 	}
 
-	public PlayerRepository getPlayers() {
+	public PlayerRepository getPlayerRepository() {
 		return players;
 	}
 
-	public void setPlayers(PlayerRepository players) {
+	private void setPlayers(PlayerRepository players) {
 		this.players = players;
 	}
 
@@ -73,7 +74,7 @@ public class GameController {
 		return sockets;
 	}
 
-	public void setSockets(Map<TeamSocket, Player> sockets) {
+	private void setSockets(Map<TeamSocket, Player> sockets) {
 		this.sockets = sockets;
 	}
 
@@ -81,7 +82,7 @@ public class GameController {
 		return board;
 	}
 
-	public void setBoard(Board board) {
+	private void setBoard(Board board) {
 		this.board = board;
 	}
 
@@ -93,8 +94,21 @@ public class GameController {
 		return queue;
 	}
 
-	public void setQueue(ActorRef queue) {
+	private void setQueue(ActorRef queue) {
 		this.queue = queue;
+	}
+
+	public List<Player> getPlayers() {
+		return this.players.getConnectedPlayers();
+	}
+
+	public Player searchPlayer(String user_nick) {
+		for (Player p : this.getPlayers()){
+			if (p.getNick().equalsIgnoreCase(user_nick)){
+				return p;
+			}
+		}
+		return null;
 	}
 
 }

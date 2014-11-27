@@ -2,6 +2,7 @@ package model;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @XmlRootElement
@@ -13,9 +14,20 @@ public class Navigation{
 	private Double next_x;
 	private Double next_y;
 	private Double current_velocity;
+	private Player player;
 	
 	public Navigation(){
 		
+	}
+	
+	@JsonIgnore
+	public void setPlayer(Player player){
+		this.player = player;
+	}
+	
+	@JsonIgnore
+	public Player getPlayer(){
+		return player;
 	}
 	
 	@JsonProperty("user_nick")

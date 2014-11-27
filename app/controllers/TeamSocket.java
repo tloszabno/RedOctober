@@ -36,16 +36,7 @@ public class TeamSocket extends WebSocket<String> {
 		in.onMessage(new F.Callback<String>() {
 			public void invoke(String event) {
 				try {
-					JsonNode node = Json.parse(event);
-					JsonNode type = node.get("type");
-					if ((!type.isNull())&&type.toString()
-							.equalsIgnoreCase("\"navigation\"")) {
-						Navigation nav = Json.fromJson(node, Navigation.class);
-						Inbox in = Inbox.create(game.getSystem());
-						in.send(game.getQueue(), nav);
-					} else {
-						sendUsersToSocket(out);
-					}
+					processIncommingMessage(out, event);
 				} catch (Throwable th) {
 					th.printStackTrace();
 				}
@@ -72,14 +63,33 @@ public class TeamSocket extends WebSocket<String> {
 	}
 
 	private void sendUsersToSocket(play.mvc.WebSocket.Out<String> out) {
-		List<Player> connectedPlayers = game.getPlayers().getConnectedPlayers();
-		FriendFilter filter = new FriendFilter(my, connectedPlayers);
+		FriendFilter filter = new FriendFilter(my, game.getPlayers());
 		out.write(Json.toJson(filter).toString());
 	}
 
 	private void sendInitMsg(play.mvc.WebSocket.Out<String> out, Board board) {
 		if (out != null) {
 			out.write(Json.toJson(board).toString());
+		}
+	}
+
+	private Navigation assemblyNavigationObject(JsonNode node) {
+		Navigation nav = Json.fromJson(node, Navigation.class);
+		Player p = game.searchPlayer(nav.getUser_nick());
+		nav.setPlayer(p);
+		return nav;
+	}
+
+	private void processIncommingMessage(final play.mvc.WebSocket.Out<String> out, String event) {
+		JsonNode node = Json.parse(event);
+		JsonNode type = node.get("type");
+		if ((!type.isNull())&&type.toString()
+				.equalsIgnoreCase("\"navigation\"")) {
+			Navigation nav = assemblyNavigationObject(node);
+			Inbox in = Inbox.create(game.getSystem());
+			in.send(game.getQueue(), nav);
+		} else {
+			sendUsersToSocket(out);
 		}
 	}
 

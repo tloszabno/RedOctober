@@ -44,7 +44,7 @@ public class TeamActor extends UntypedActor {
 	public static WebSocket<String> socket(String name, String team) {
 		Player player = new Player(name,team,game.getBoard().getRandomX(),game.getBoard().getRandomY());
 		System.out.println("connecting:" + player);
-		game.getPlayers().connectNewPlayer(player);
+		game.getPlayerRepository().connectNewPlayer(player);
 	    TeamSocket teamSocket = new TeamSocket(game,player);
 		game.getSockets().put(teamSocket, player);
 	    game.broadcast();
