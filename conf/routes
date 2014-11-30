@@ -15,3 +15,5 @@ GET     /join                       controllers.TeamActor.socket(name: String, t
 GET     /test_websocket             controllers.Application.websocket()
 
 GET     /test_params                controllers.Application.testParameters(name: String, team: String)
+
+GET     /map                        controllers.Application.map()
