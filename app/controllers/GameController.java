@@ -3,15 +3,14 @@ package controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import model.Board;
+import model.Navigation;
 import model.Player;
 import model.PlayerRepository;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
-import akka.actor.Inbox;
 import akka.actor.Props;
 
 public class GameController {
@@ -21,31 +20,17 @@ public class GameController {
     private PlayerRepository players;
     private Map<TeamSocket, Player> sockets;
     private Board board;
+    private ConcurrentLinkedQueue<Navigation> concurrentQueue;
     
 	public GameController(){
+        system=ActorSystem.create("RedOctober");
+        concurrentQueue = new ConcurrentLinkedQueue<Navigation>();
 		setPlayers(new PlayerRepository());
         setSockets(new HashMap<TeamSocket, Player>());
         setBoard(new Board());
-        system=ActorSystem.create("RedOctober");
-        setQueue(getSystem().actorOf(Props.create(QueueActor.class), "queue"));    
-        startTimer();
-	}
-
-	private void startTimer() {
-		Timer timer = new Timer();
-		timer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				Inbox in = Inbox.create(getSystem());
-				in.send(getQueue(), "getAll");
-				try {
-					Thread.sleep(200);
-					in.send(getQueue(), "stopProcessing");
-				} catch (InterruptedException ex){
-					ex.printStackTrace();
-				}
-			}
-		}, 2000, 1000);
+        setQueue(getSystem().actorOf(Props.create(QueueActor.class,concurrentQueue), "queue"));
+        Time time = new Time(concurrentQueue,this);
+        time.startTimer();
 	}
 	
 	public void disconnect(TeamSocket teamSocket) {

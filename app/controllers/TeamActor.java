@@ -1,19 +1,8 @@
 package controllers;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
-
-import model.Board;
 import model.Player;
-import model.PlayerRepository;
 import play.mvc.WebSocket;
-import scala.concurrent.duration.Duration;
 import akka.actor.ActorRef;
-import akka.actor.ActorSystem;
-import akka.actor.Inbox;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
 

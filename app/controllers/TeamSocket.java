@@ -1,22 +1,16 @@
 package controllers;
 
-import java.util.List;
-
 import model.Board;
 import model.FriendFilter;
 import model.Navigation;
 import model.Player;
-import model.PlayerRepository;
 import play.libs.F;
 import play.libs.F.Callback0;
 import play.libs.Json;
 import play.mvc.WebSocket;
-
-import akka.actor.ActorRef;
 import akka.actor.Inbox;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class TeamSocket extends WebSocket<String> {
 
