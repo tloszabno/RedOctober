@@ -5,15 +5,15 @@ import java.util.List;
 
 public class PlayerRepository {
 
-	private List<Player> players = new LinkedList(); 
+	private List<Player> players = new LinkedList<Player>(); 
 
-	public List connectNewPlayer( Player player){
+	public List<Player> connectNewPlayer( Player player){
 		players.add(player);
 		
 		return players;
 	}
 	
-	public List getConnectedPlayers(){
+	public List<Player> getConnectedPlayers(){
 		return players;
 	}
 	

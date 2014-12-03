@@ -1,6 +1,10 @@
 package model;
 
+import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@XmlRootElement
 public class Player {
 
 	private String nick;
@@ -15,24 +19,28 @@ public class Player {
 		this.yPosition = yPosition;
 	}
 	
+	@JsonProperty("x")
 	public double getxPosition() {
 		return xPosition;
 	}
 	public void setxPosition(double xPosition) {
 		this.xPosition = xPosition;
 	}
+	@JsonProperty("y")
 	public double getyPosition() {
 		return yPosition;
 	}
 	public void setyPosition(double yPosition) {
 		this.yPosition = yPosition;
 	}
+	@JsonProperty("xDirection")
 	public double getxDirection() {
 		return xDirection;
 	}
 	public void setxDirection(double xDirection) {
 		this.xDirection = xDirection;
 	}
+	@JsonProperty("yDirection")
 	public double getyDirection() {
 		return yDirection;
 	}
@@ -40,10 +48,12 @@ public class Player {
 		this.yDirection = yDirection;
 	}
 
+	@JsonProperty("user_nick")
 	public String getNick() {
 		return nick;
 	}
 	
+	@JsonProperty("team")
 	public String getTeam() {
 		return team;
 	}
@@ -57,5 +67,9 @@ public class Player {
 		yPosition += yDirection;
 	}
 
+	@Override
+	public String toString(){
+		return "name:"+nick+" team:"+team;
+	}
 
 }
