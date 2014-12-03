@@ -37,19 +37,12 @@ function SubMap() {
     var speed = 0
     var dalfa = 0
 
-    mainShip = drawShip("U", 100,100, 1, 0x800000 )
+    var mainShip = drawShip("U", 100,100, 1, 0x800000 )
     stage.addChild(mainShip);
 
-    this.getMap = function (){
-        return map
-    }
-
     var animate = function () {
-
         nowTime = Date.now()
-
         deltatime = (nowTime - lastTime) / 1000
-
         lastTime = nowTime
 
         mainShip.rotation += dalfa * deltatime;
@@ -71,6 +64,13 @@ function SubMap() {
     }
     requestAnimFrame(animate);
 
+
+
+    // API
+    this.getMap = function (){
+        return map
+    }
+
     this.setSpeed = function (v) {
         speed = v
     }
@@ -90,8 +90,6 @@ function SubMap() {
     this.getRotation = function () {
         return mainShip.rotation
     }
-
-
 
     this.addShip = function(name, x, y , angle, color) {
 
