@@ -1,76 +1,115 @@
-// create an new instance of a pixi stage
-var stage = new PIXI.Stage(0x66FF99);
 
+function SubMap() {
+
+    var drawShip = function (name, x,y,rotation, color){
+        var ctx = new PIXI.Graphics();
+        var text = new PIXI.Text(name, {font:"15px Arial", fill:"black"});
+        text.position.x = -4
+        text.position.y = -4
+        ctx.lineStyle(3,color );
+        ctx.beginFill(0x999999);
+        ctx.drawCircle(0, 0, 10);
+        ctx.moveTo(0, 10);
+        ctx.lineTo(0, 18);
+        ctx.position.x = x;
+        ctx.position.y = y;
+        ctx.rotation = rotation;
+        ctx.name = name;
+        ctx.addChild(text)
+        return ctx;
+    }
+
+// main view of PIXI Canvas
+    var stage = new PIXI.Stage(0x66FF99);
 // create a renderer instance
-var renderer = PIXI.autoDetectRenderer(900, 600);
+    var renderer = PIXI.autoDetectRenderer(900, 600);
 
 // add the renderer view element to the DOM
-var map = renderer.view
+    var map = renderer.view
 
-var deltatime = 0
-var lastTime = Date.now()
-var nowTime = Date.now()
-requestAnimFrame(animate);
+// map (dictionary) with other ships
+    var stateShips = Object(); // or var map = {};
+// for counting time between frames
+    var deltatime = 0
+    var lastTime = Date.now()
+    var nowTime = Date.now()
 
-var ctx = new PIXI.Graphics();
+    var speed = 0
+    var dalfa = 0
 
-ctx.lineStyle(3, 0xFF0000);
+    mainShip = drawShip("U", 100,100, 1, 0x800000 )
+    stage.addChild(mainShip);
 
-var speed = 4
-var dalfa = 0
+    this.getMap = function (){
+        return map
+    }
 
-ctx.beginFill(0x999999);
-ctx.drawCircle(0,0,10);
-ctx.moveTo(0, 10);
-ctx.lineTo(0, 18);
+    var animate = function () {
 
-stage.addChild(ctx);
+        nowTime = Date.now()
 
-function animate() {
+        deltatime = (nowTime - lastTime) / 1000
 
-    nowTime = Date.now()
+        lastTime = nowTime
 
-    deltatime = (nowTime - lastTime) / 1000 
+        mainShip.rotation += dalfa * deltatime;
+        mainShip.position.x += Math.sin(-mainShip.rotation) * speed * deltatime;
+        mainShip.position.y += Math.cos(mainShip.rotation) * speed * deltatime;
 
-    lastTime = nowTime
+        mainShip.position.x = (mainShip.position.x % renderer.width);
+        mainShip.position.y = (mainShip.position.y % renderer.height);
+
+        if (mainShip.position.x < 0) {
+            mainShip.position.x += renderer.width
+        }
+        if (mainShip.position.y < 0) {
+            mainShip.position.y += renderer.height
+        }
+        requestAnimFrame(animate);
+        // render the stage
+        renderer.render(stage);
+    }
     requestAnimFrame(animate);
 
-    ctx.rotation += dalfa * deltatime;
-    ctx.position.x += Math.sin(-ctx.rotation) * speed * deltatime;
-    ctx.position.y += Math.cos(ctx.rotation) * speed * deltatime;
-
-    ctx.position.x = (ctx.position.x % renderer.width);
-    ctx.position.y = (ctx.position.y % renderer.height);
-
-    if (ctx.position.x < 0) {
-        ctx.position.x += renderer.width
-    }
-    if (ctx.position.y < 0) {
-        ctx.position.y += renderer.height
+    this.setSpeed = function (v) {
+        speed = v
     }
 
-    // render the stage
-    renderer.render(stage);
+    this.setRotationSpeed = function (rotationSpeed) {
+        dalfa = rotationSpeed
+    }
+
+    this.getXPosition = function () {
+        return mainShip.position.x
+    }
+
+    this.getYPosition = function () {
+        return mainShip.position.y
+    }
+
+    this.getRotation = function () {
+        return mainShip.rotation
+    }
+
+
+
+    this.addShip = function(name, x, y , angle, color) {
+
+        var ship = drawShip(name, x, y, angle, color);
+        stateShips[name] = ship
+        stage.addChild(ship)
+    }
+
+    this.moveShip = function (name, x,y, angle) {
+        ship = stateShips[name] || drawShip(name, x, y, angle, color);
+        ship.position.x = x
+        ship.position.y = y
+        ship.rotation = angle
+    }
 }
 
-function setSpeed(v) {
-    speed = v
-}
 
-function setRotationSpeed(av){
-    dalfa = av
-}
 
-function getXPosition() {
-    return ctx.position.x
-}
 
-function getYPosition() {
-    return ctx.position.y
-}
-
-function getRotation() {
-    return ctx.rotation
-}
 
 
