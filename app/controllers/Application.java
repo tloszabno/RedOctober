@@ -18,5 +18,9 @@ public class Application extends Controller {
 	public static Result testParameters(String name, String team) {
 		return ok(index.render("passing:"+name+":"+team));
 	}
+	
+    public static Result map() {
+        return ok(map.render());
+    }
 
 }
