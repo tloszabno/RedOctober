@@ -29,15 +29,13 @@ private GameController controller;
 		while(!queue.isEmpty()){
 			Navigation item = queue.remove();
 			System.out.println("Processing:"+item.toString());
-
-			Player player = controller.searchPlayer(item.getUser_nick());
-			if(player != null) // czasami się zdarza, np. kiedy się rozłącza
-				processNavigation(player, item);
+            processNavigation(item);
 		}
 		controller.broadcast();
 	}
 
-	private void processNavigation(Player player, Navigation navigation) {
+	private void processNavigation(Navigation navigation) {
+		Player player =	navigation.getPlayer(); // jesteśmy pewni, że tu nie będzie nigdy nulla?
 		player.setxPosition(navigation.getNext_x());
 		player.setyPosition((navigation.getNext_y()));
 		//TODO Collisions, torpedoes, explosions
