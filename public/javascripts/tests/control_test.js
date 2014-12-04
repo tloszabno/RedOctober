@@ -13,7 +13,7 @@ function fake_controlllers_action(){
     shipController.dispatch({
         type:"map_init_configuration",
         x_size: 1200,
-        y_size: 400
+        y_size: 500
     });
 
     shipController.dispatch({
@@ -28,14 +28,40 @@ function fake_controlllers_action(){
             {
                 x: 140.0, y: 250.0, user_nick: 2
             }
+        ],
+        friendly:[
+            {
+                x: 200, y: 250.0 + delta, user_nick: 3
+            }
         ]
     });
 
 
 
+    var delta = 2;
+    window.setInterval(function(){
+        shipController.dispatch({
+            type:"position",
+            enemy:[
+                {
+                    x: 100.0 + delta, y: 150.0 + delta, user_nick: 1
+                },
+                {
+                    x: 140.0 + delta, y: 250.0 + delta, user_nick: 2
+                }
+            ],
+            friendly:[
+                {
+                    x: 200, y: 250.0 + delta, user_nick: 3
+                }
+            ]
+        });
+        delta += 2;
+    }, 1000);
+
+
+
+
 }
-
-
-
 
 fake_controlllers_action();

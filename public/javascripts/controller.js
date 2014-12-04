@@ -46,24 +46,33 @@ function Controller() {
         log("[Exit] handle_init_map");
     }
 
+    function add_or_move_ships(ships, ship_type) {
+        if (ships) {
+            for (var i = 0; i < ships.length; ++i) {
+                var enemy_ship = ships[i];
+                log("Putting ship to [" + enemy_ship.x + "," + enemy_ship.y + "] user_nick=" + enemy_ship.user_nick + " ship_type=" + ship_type);
+
+                // TODO: move angle to config or server - to consideration
+                map.addOrMoveShip(enemy_ship.user_nick, enemy_ship.x, enemy_ship.y, 0.2, ship_type == SHIP_TYPE.Enemy ? SHIP_COLOR_OF.enemy : SHIP_COLOR_OF.friendly);
+            }
+        }
+    }
+
     function handle_set_positions(commandObject) {
         log("[Entry] handle_set_positions");
 
         var my_ship = commandObject.my;
-        log("Putting mine ship to [" + my_ship.x + "," + my_ship.y + "]");
-        // TODO: move angle to config or server - to consideration
-        map.putOrMoveMainShip(my_ship.x, my_ship.y, 0.2, SHIP_COLOR_OF.mine);
+        if( my_ship !== undefined ) {
+            log("Putting mine ship to [" + my_ship.x + "," + my_ship.y + "]");
+            // TODO: move angle to config or server - to consideration
+            map.putOrMoveMainShip(my_ship.x, my_ship.y, 0.2, SHIP_COLOR_OF.mine);
+        }
 
         var enemy_ships = commandObject.enemy;
-        if( enemy_ships ){
-            for(var i = 0; i < enemy_ships.length; ++i){
-                var enemy_ship = enemy_ships[i];
-                log("Putting enemy ship to [" + enemy_ship.x + "," + enemy_ship.y + "] user_nick=" + enemy_ship.user_nick);
+        add_or_move_ships(enemy_ships, SHIP_TYPE.Enemy);
 
-                // TODO: move angle to config or server - to consideration
-                map.addOrMoveShip(enemy_ship.user_nick, enemy_ship.x, enemy_ship.y, 0.2, SHIP_COLOR_OF.enemy);
-            };
-        }
+        var friendly_ships = commandObject.friendly;
+        add_or_move_ships(friendly_ships, SHIP_TYPE.Friendly);
 
         log("[Exit] handle_set_positions");
     }

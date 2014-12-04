@@ -6,7 +6,7 @@ function SubMap(map_x_size, map_y_size) {
         var text = new PIXI.Text(name, {font:"15px Arial", fill:"black"});
         text.position.x = -4;
         text.position.y = -4;
-        ctx.lineStyle(3,color );
+        ctx.lineStyle(3, color );
         ctx.beginFill(0x999999);
         ctx.drawCircle(0, 0, 10);
         ctx.moveTo(0, 10);
@@ -102,16 +102,19 @@ function SubMap(map_x_size, map_y_size) {
         stage.addChild(ship)
     };
 
-    this.moveShip = function (name, x,y, angle) {
+    this.moveShip = function (name, x,y, angle, color) {
         var ship = stateShips[name];
-        drawShip(name, x, y, angle, ship.color);
+        log("ship=" + ship + " for name=" + name);
+        drawShip(name, x, y, angle, color);
         ship.position.x = x;
         ship.position.y = y;
         ship.rotation = angle
     };
 
     this.putMyShip = function(x,y,angle, color){
-        mainShip = drawShip(MY_SHIP_CONFIG.default_id, x,y, angle, color);
+        var name = MY_SHIP_CONFIG.default_id;
+        mainShip = drawShip(name, x,y, angle, color);
+        stateShips[name] = mainShip;
         stage.addChild(mainShip);
     }
 
@@ -119,7 +122,7 @@ function SubMap(map_x_size, map_y_size) {
         if( mainShip === undefined){
             this.putMyShip(x,y,angle, color);
         }else{
-            this.moveShip(MY_SHIP_CONFIG.default_id,x,y,angle);
+            this.moveShip(MY_SHIP_CONFIG.default_id,x,y,angle,color);
         }
     }
 
@@ -129,7 +132,7 @@ function SubMap(map_x_size, map_y_size) {
         if (ship === undefined) {
             this.addShip(name, x, y, angle, color);
         } else {
-            this.moveShip(name, x, y, angle);
+            this.moveShip(name, x, y, angle, color);
         }
     }
 }
