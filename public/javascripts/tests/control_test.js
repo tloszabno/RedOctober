@@ -1,10 +1,5 @@
 log("Only for test purpose, in production remove control_test.js file");
 
-function assertTrue(condition){
-    if(!condition){
-        throw "Assertion failed";
-    }
-}
 
 
 function fake_controlllers_action(){

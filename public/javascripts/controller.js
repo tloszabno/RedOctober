@@ -45,12 +45,10 @@ function Controller() {
         var current_x = map.getXPosition();
         var current_y = map.getYPosition();
 
-
-
         var dx = current_x - position_cache[my_ship_name].previous_x;
         var dy = current_y - position_cache[my_ship_name].previous_y;
 
-        refresh_position_cache();
+        refresh_position_cache(my_ship_name, current_x, current_y);
 
         var current_velocity = map.getSpeed();
 
