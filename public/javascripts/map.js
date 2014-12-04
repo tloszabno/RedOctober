@@ -104,7 +104,6 @@ function SubMap(map_x_size, map_y_size) {
 
     this.moveShip = function (name, x,y, angle, color) {
         var ship = stateShips[name];
-        log("ship=" + ship + " for name=" + name);
         drawShip(name, x, y, angle, color);
         ship.position.x = x;
         ship.position.y = y;

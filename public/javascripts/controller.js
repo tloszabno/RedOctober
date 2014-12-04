@@ -1,6 +1,4 @@
-/**
-* Here put integration things such as parsing requests from and to controller
- **/
+
 var isDebug = true;
 
 function log(msg){
@@ -15,9 +13,14 @@ function error(msg){
 
 
 function Controller() {
+    // fileds
     var map;
+    var previous_x;
+    var previous_y;
 
-    /* INVOKE THIS FUNCTION ON MESSAGE FROM SERVER */
+    /**
+     *  INVOKE THIS FUNCTION ON MESSAGE FROM SERVER
+     **/
     this.dispatch =  function(commandObject) {
         var type = commandObject.type;
         switch (type) {
@@ -30,8 +33,46 @@ function Controller() {
             default :
                 error("Got message with unknown type=" + type);
         }
-    }
+    };
 
+    /**
+     *  INVOKE THIS FUNCTION WHEN NEED TO GET NAVIGATION MESSAGE TO SERVER
+     **/
+    this.get_navigation = function(){
+        log("[Entry] get_navigation");
+
+        var current_x = map.getXPosition();
+        var current_y = map.getYPosition();
+
+
+
+        var dx = current_x - previous_x;
+        var dy = current_y - previous_y;
+
+        refresh_position_cache();
+
+        var current_velocity = map.getSpeed();
+
+        // TODO: get user nick from some hidden input
+        var user_nick = 0;
+
+        var message = {
+            type: "navigation",
+            user_nick: user_nick,
+            current_x: current_x,
+            current_y: current_y,
+            x_prim: dx,
+            y_prim: dy,
+            current_velocity: current_velocity
+        };
+
+        log("[Exit] get_navigation");
+        return message;
+    };
+
+    // ********
+    // PRIVATE
+    // ********
 
     function handle_init_map(commandObject) {
         log("[Entry] handle_init_map");
@@ -66,6 +107,8 @@ function Controller() {
             log("Putting mine ship to [" + my_ship.x + "," + my_ship.y + "]");
             // TODO: move angle to config or server - to consideration
             map.putOrMoveMainShip(my_ship.x, my_ship.y, 0.2, SHIP_COLOR_OF.mine);
+
+            refresh_position_cache();
         }
 
         var enemy_ships = commandObject.enemy;
@@ -145,5 +188,9 @@ function Controller() {
         }
     }
 
+    function refresh_position_cache(){
+        previous_x = map.getXPosition();
+        previous_y = map.getYPosition();
+    }
 
 }

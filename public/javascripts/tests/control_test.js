@@ -60,6 +60,10 @@ function fake_controlllers_action(){
     }, 1000);
 
 
+    // get message to server
+    window.setInterval(function(){
+        log("NAVIGATION_MESSAGE=" + JSON.stringify(shipController.get_navigation()));
+    }, 1000);
 
 
 }
