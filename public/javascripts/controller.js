@@ -15,8 +15,9 @@ function error(msg){
 function Controller() {
     // fileds
     var map;
-    var previous_x;
-    var previous_y;
+    var my_ship_name;
+    var position_cache = {};
+
 
     /**
      *  INVOKE THIS FUNCTION ON MESSAGE FROM SERVER
@@ -46,8 +47,8 @@ function Controller() {
 
 
 
-        var dx = current_x - previous_x;
-        var dy = current_y - previous_y;
+        var dx = current_x - position_cache[my_ship_name].previous_x;
+        var dy = current_y - position_cache[my_ship_name].previous_y;
 
         refresh_position_cache();
 
@@ -90,11 +91,14 @@ function Controller() {
     function add_or_move_ships(ships, ship_type) {
         if (ships) {
             for (var i = 0; i < ships.length; ++i) {
-                var enemy_ship = ships[i];
-                log("Putting ship to [" + enemy_ship.x + "," + enemy_ship.y + "] user_nick=" + enemy_ship.user_nick + " ship_type=" + ship_type);
+                var ship = ships[i];
+                log("Putting ship to [" + ship.x + "," + ship.y + "] user_nick=" + ship.user_nick + " ship_type=" + ship_type);
 
                 // TODO: move angle to config or server - to consideration
-                map.addOrMoveShip(enemy_ship.user_nick, enemy_ship.x, enemy_ship.y, 0.2, ship_type == SHIP_TYPE.Enemy ? SHIP_COLOR_OF.enemy : SHIP_COLOR_OF.friendly);
+                var angel = compute_angel(ship.user_nick, ship.x, ship.y);
+                map.addOrMoveShip(ship.user_nick, ship.x, ship.y, angel, ship_type == SHIP_TYPE.Enemy ? SHIP_COLOR_OF.enemy : SHIP_COLOR_OF.friendly);
+
+                refresh_position_cache( ship.user_nick, ship.x, ship.y );
             }
         }
     }
@@ -106,9 +110,13 @@ function Controller() {
         if( my_ship !== undefined ) {
             log("Putting mine ship to [" + my_ship.x + "," + my_ship.y + "]");
             // TODO: move angle to config or server - to consideration
-            map.putOrMoveMainShip(my_ship.x, my_ship.y, 0.2, SHIP_COLOR_OF.mine);
 
-            refresh_position_cache();
+            my_ship_name = MY_SHIP_CONFIG.default_id;
+
+            var angel = compute_angel(my_ship_name, my_ship.x, my_ship.y);
+            map.putOrMoveMainShip(my_ship.x, my_ship.y, angel, SHIP_COLOR_OF.mine);
+
+            refresh_position_cache(my_ship_name, my_ship.x, my_ship.y);
         }
 
         var enemy_ships = commandObject.enemy;
@@ -188,9 +196,33 @@ function Controller() {
         }
     }
 
-    function refresh_position_cache(){
-        previous_x = map.getXPosition();
-        previous_y = map.getYPosition();
+    function refresh_position_cache(ship_name, x, y){
+        position_cache[ship_name] = {
+            previous_x: x,
+            previous_y: y
+        };
     }
+    function compute_angel(ship_name, new_x, new_y){
+
+        if( position_cache[ship_name] !== undefined ) {
+            var previous_x = position_cache[ship_name].previous_x;
+            var previous_y = position_cache[ship_name].previous_y;
+        }
+
+        var dx = previous_x - new_x;
+        var dy = previous_y - new_y ;
+
+        if( previous_x === undefined || previous_y === undefined){
+            return MY_SHIP_CONFIG.default_angel;
+        }
+
+        var angel = Math.atan2(dx, -dy);
+
+        return angel;
+    }
+
+
+
+
 
 }
