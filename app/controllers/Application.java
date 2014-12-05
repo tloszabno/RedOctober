@@ -8,4 +8,8 @@ public class Application extends Controller {
         return ok(views.html.websocket.render());
     }
 
+    public static Result map() {
+        return ok(map.render());
+    }
+
 }

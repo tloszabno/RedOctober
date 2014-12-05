@@ -13,3 +13,5 @@ GET     /join                       controllers.TeamActor.socket(name: String, t
 
 # Render websocket test page
 GET     /test_websocket             controllers.Application.websocket()
+
+GET     /map                        controllers.Application.map()
