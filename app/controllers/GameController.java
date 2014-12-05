@@ -21,6 +21,7 @@ public class GameController {
     private Map<TeamSocket, Player> sockets;
     private Board board;
     private ConcurrentLinkedQueue<Navigation> concurrentQueue;
+    private TimeConfiguration timeconfig;
     
 	public GameController(){
         system=ActorSystem.create("RedOctober");
@@ -29,7 +30,8 @@ public class GameController {
         setSockets(new HashMap<TeamSocket, Player>());
         setBoard(new Board());
         setQueue(getSystem().actorOf(Props.create(QueueActor.class,concurrentQueue), "queue"));
-        Time time = new Time(concurrentQueue,this);
+        timeconfig = new TimeConfiguration();
+		Time time = new Time(concurrentQueue,this,timeconfig);
         time.startTimer();
 	}
 	
@@ -94,6 +96,10 @@ public class GameController {
 			}
 		}
 		return null;
+	}
+
+	public double getIntervals() {
+		return timeconfig.getRate()/1000.0;
 	}
 
 }

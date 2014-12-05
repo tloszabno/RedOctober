@@ -57,7 +57,7 @@ public class TeamSocket extends WebSocket<String> {
 	}
 
 	private void sendUsersToSocket(play.mvc.WebSocket.Out<String> out) {
-		FriendFilter filter = new FriendFilter(my, game.getPlayers());
+		FriendFilter filter = new FriendFilter(my, game.getPlayers(), game.getIntervals());
 		out.write(Json.toJson(filter).toString());
 	}
 
@@ -80,8 +80,12 @@ public class TeamSocket extends WebSocket<String> {
 		if ((!type.isNull())&&type.toString()
 				.equalsIgnoreCase("\"navigation\"")) {
 			Navigation nav = assemblyNavigationObject(node);
-			Inbox in = Inbox.create(game.getSystem());
-			in.send(game.getQueue(), nav);
+			if (nav.getPlayer() != null){
+				Inbox in = Inbox.create(game.getSystem());
+				in.send(game.getQueue(), nav);
+			} else {
+				throw new RuntimeException("Backend received invalid user name in navigation object");
+			}
 		} else {
 			sendUsersToSocket(out);
 		}

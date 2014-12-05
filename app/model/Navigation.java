@@ -11,9 +11,8 @@ public class Navigation{
 	private String user_nick;
 	private Double current_x;
 	private Double current_y;
-	private Double next_x;
-	private Double next_y;
-	private Double current_velocity;
+	private Double x_prim;
+	private Double y_prim;
 	private Player player;
 	
 	public Navigation(){
@@ -60,36 +59,26 @@ public class Navigation{
 		this.current_y = current_y;
 	}
 
-	@JsonProperty("next_x")
-	public Double getNext_x() {
-		return next_x;
+	@JsonProperty("x_prim")
+	public Double getXPrim() {
+		return x_prim;
 	}
 
-	@JsonProperty("next_x")
-	public void setNext_x(Double next_x) {
-		this.next_x = next_x;
+	@JsonProperty("x_prim")
+	public void setXPrim(Double next_x) {
+		this.x_prim = next_x;
 	}
 
-	@JsonProperty("next_y")
-	public Double getNext_y() {
-		return next_y;
+	@JsonProperty("y_prim")
+	public Double getYPrim() {
+		return y_prim;
 	}
 
-	@JsonProperty("next_y")
-	public void setNext_y(Double next_y) {
-		this.next_y = next_y;
+	@JsonProperty("y_prim")
+	public void setYPrim(Double next_y) {
+		this.y_prim = next_y;
 	}
 
-	@JsonProperty("current_velocity")
-	public Double getCurrent_velocity() {
-		return current_velocity;
-	}
-
-	@JsonProperty("current_velocity")
-	public void setCurrent_velocity(Double current_velocity) {
-		this.current_velocity = current_velocity;
-	}
-	
 	@JsonProperty("type")
 	public void setType(String type) {
 		type = type.replaceAll("\"", "");
@@ -106,6 +95,14 @@ public class Navigation{
 	
 	@Override
 	public String toString(){
-		return "nick:"+user_nick+" next_x:"+next_x+" next_y:"+next_y;
+		return "nick:"+user_nick+" x_prim:"+x_prim+" y_prim:"+y_prim;
+	}
+	
+	public Double getNext_x() {
+		return current_x+x_prim;
+	}
+	
+	public Double getNext_y() {
+		return current_y+y_prim;
 	}
 }
