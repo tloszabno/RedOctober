@@ -65,9 +65,9 @@ public class TeamSocket extends WebSocket<String> {
 
 	private void sendUsersToSocket(play.mvc.WebSocket.Out<String> out) {
         ObjectNode result = Json.newObject();
-        result.put("messageType", "log");
-        result.put("text", "All users already connected");
-        out.write(result.toString());
+        //result.put("messageType", "log");
+        //result.put("text", "All users already connected");
+        //out.write(result.toString());
         List<Player> connectedPlayers = list.getConnectedPlayers();
         FriendFilter filter = new FriendFilter(my, connectedPlayers);
 //      ObjectNode players = Json.newObject();
@@ -82,6 +82,7 @@ public class TeamSocket extends WebSocket<String> {
 //	        result.put("board", Json.toJson(board));
 //			out.write(result.toString());
 			out.write(Json.toJson(board).toString());
+			sendUsersToSocket(out);
 		}
 	}
 
