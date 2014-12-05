@@ -1,6 +1,7 @@
 package controllers;
 
 import play.mvc.*;
+import views.html.map;
 
 public class Application extends Controller {
     

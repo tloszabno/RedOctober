@@ -83,16 +83,15 @@
     function stopTimer() {
     	window.clearInterval(interval);
     }
-    
+
     function navTimer() {
-    	var dao = {
+		var dao = {
     		    type: "navigation",
     		    user_nick: name,
     		    current_x: 1.0,
     		    current_y: 1.0,
-    		    next_x: 2.0,
-    		    next_y: 1.0,
-    		    current_velocity: 1.0
+    		    x_prim: 2.0,
+    		    y_prim: 1.0
     		};
     	doSend(dao);
     }
