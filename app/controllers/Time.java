@@ -4,6 +4,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import model.Navigation;
+import model.Player;
 
 public class Time extends TimerTask{
 
@@ -29,9 +30,16 @@ private GameController controller;
 		while(!queue.isEmpty()){
 			Navigation item = queue.remove();
 			System.out.println("Processing:"+item.toString());
-			//TODO Change boat position
+            processNavigation(item);
 		}
 		controller.broadcast();
+	}
+
+	private void processNavigation(Navigation navigation) {
+		Player player =	navigation.getPlayer(); // jesteśmy pewni, że tu nie będzie nigdy nulla?
+		player.setxPosition(navigation.getNext_x());
+		player.setyPosition((navigation.getNext_y()));
+		//TODO Collisions, torpedoes, explosions
 	}
 
 }
