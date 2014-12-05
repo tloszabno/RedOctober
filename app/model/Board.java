@@ -11,9 +11,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @XmlRootElement
 public class Board {
 
-	private final double width = 1000.0;
-	private final double height = 500.0;
-	private final double playerRadius = 10.0;
+	private double width = 1000.0;
+	private double height = 500.0;
 	private Map<String, Player> players;
 
 	public Board() {
@@ -55,20 +54,47 @@ public class Board {
 		return "map_init_configuration";
 	}
 	
+	@JsonProperty("type")
+	public void setType(String type) {
+		type = type.replaceAll("\"", "");
+		if (!type.equalsIgnoreCase("map_init_configuration")){
+			String message = String.format("Expected JSON object of type \"map_init_configuration\" not \"%s\"",type);
+			throw new RuntimeException(message);
+		}
+	}
+	
 	@JsonProperty("x_size")
 	public double getWidth() {
 		return width;
+	}
+	
+	public void setWidth(double w){
+		this.width = w;
 	}
 
 	@JsonProperty("y_size")
 	public double getHeight() {
 		return height;
 	}
-
-	@JsonProperty("playerRadius")
-	public double getPlayerRadius() {
-		return playerRadius;
+	
+	public void setHeight(double w){
+		this.height = w;
 	}
+	
+	//@JsonProperty("initial_velocity")
+	/*
+	@JsonIgnore
+	public double[] getInitialVelocity(){
+		return new double[]{randomV(),randomV()};
+	}
+	
+	public void setInitialVelocity(double[] v){
+		//Ignore values
+	}
+
+	private double randomV() {
+		return Math.random()*10.0-5.0;
+	}*/
 
 	@JsonIgnore
 	public double getRandomX() {
