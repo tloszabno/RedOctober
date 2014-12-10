@@ -39,8 +39,8 @@
 	}
 
 	function onMessage(evt) {
-	console.log(evt.data);
-		controller.dispatch("MSG from server=" + JSON.parse(evt.data))
+		console.log("MSG from server=" + evt.data);
+		controller.dispatch(JSON.parse(evt.data))
 		//writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data
 		//		+ '</span>');
 		//websocket.close();
