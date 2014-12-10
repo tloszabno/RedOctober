@@ -40,10 +40,11 @@
 
 	function onMessage(evt) {
 	console.log(evt.data);
-		controller.dispatch(JSON.parse(evt.data))
+		controller.dispatch("MSG from server=" + JSON.parse(evt.data))
 		//writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data
 		//		+ '</span>');
 		//websocket.close();
+		///doSend(controller.get_navigation());
 	}
 
 	function onError(evt) {

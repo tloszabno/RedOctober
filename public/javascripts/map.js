@@ -1,12 +1,12 @@
 
 function SubMap(map_x_size, map_y_size) {
-
     var drawShip = function (name, x,y,rotation, color){
         var ctx = new PIXI.Graphics();
         var text = new PIXI.Text(name, {font:"15px Arial", fill:"black"});
         text.position.x = -4;
         text.position.y = -4;
         ctx.lineStyle(3, color );
+
         ctx.beginFill(0x999999);
         ctx.drawCircle(0, 0, 10);
         ctx.moveTo(0, 10);
@@ -20,6 +20,7 @@ function SubMap(map_x_size, map_y_size) {
         return ctx;
     };
 
+
 // main view of PIXI Canvas
     var stage = new PIXI.Stage(0x66FF99);
 // create a renderer instance
@@ -28,9 +29,11 @@ function SubMap(map_x_size, map_y_size) {
 // add the renderer view element to the DOM
     var map = renderer.view;
 
+
 // map (dictionary) with other ships
     var stateShips = Object(); // or var map = {};
 // for counting time between frames
+
     var deltatime = 0;
     var lastTime = Date.now();
     var nowTime = Date.now();
@@ -59,11 +62,14 @@ function SubMap(map_x_size, map_y_size) {
             if (mainShip.position.y < 0) {
                 mainShip.position.y += renderer.height
             }
+
         }
         requestAnimFrame(animate);
         // render the stage
         renderer.render(stage);
+
     };
+
     requestAnimFrame(animate);
 
 

@@ -9,14 +9,16 @@ public class FriendFilter {
 	
 	private Player my;
 	private List<Player> all_players;
-	
+	private double intervals;
+
 	enum Filter{
 		FRIENDS,ENEMIES;
 	}
-	
-	public FriendFilter(Player my, List<Player> all){
+
+	public FriendFilter(Player my, List<Player> all, double intervals){
 		this.my = my;
 		this.all_players = all;
+		this.intervals = intervals;
 	}
 	
 	@JsonProperty("type")
@@ -26,7 +28,7 @@ public class FriendFilter {
 	
 	@JsonProperty("intervals")
 	public double getIntervals(){
-		return  0.2;
+		return  intervals;
 	}
 	
 	@JsonProperty("friendly")

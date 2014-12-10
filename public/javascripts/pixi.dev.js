@@ -4874,7 +4874,8 @@ PIXI.Stage.prototype.getMousePosition = function()
  */
  
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-// http://mine.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+
+// http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
 
 // requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
 
@@ -5814,9 +5815,9 @@ PIXI.PixiShader.prototype.init = function()
 
     // Begin worst hack eva //
 
-    // WHY??? ONLY on mine chrome pixel the line above returns -1 when using filters?
+    // WHY??? ONLY on my chrome pixel the line above returns -1 when using filters?
     // maybe its something to do with the current state of the gl context.
-    // I'm convinced this is a bug in the chrome browser as there is NO reason why this should be returning -1 especially as it only manifests on mine chrome pixel
+    // I'm convinced this is a bug in the chrome browser as there is NO reason why this should be returning -1 especially as it only manifests on my chrome pixel
     // If theres any webGL people that know why could happen please help :)
     if(this.colorAttribute === -1)
     {
@@ -6223,9 +6224,11 @@ PIXI.PixiFastShader.prototype.init = function()
    
     // Begin worst hack eva //
 
+
     // WHY??? ONLY on mine chrome pixel the line above returns -1 when using filters?
     // maybe its somthing to do with the current state of the gl context.
     // Im convinced this is a bug in the chrome browser as there is NO reason why this should be returning -1 especially as it only manifests on mine chrome pixel
+
     // If theres any webGL people that know why could happen please help :)
     if(this.colorAttribute === -1)
     {

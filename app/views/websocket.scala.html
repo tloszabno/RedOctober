@@ -1,6 +1,100 @@
 @main(null) {
 
 <script language="javascript" type="text/javascript">
+	var wsUri = "ws://localhost:9000/join";
+	var output;
+	var name;
+	var team;
+
+	var data;
+	var root;
+	var interval;
+
+	function init() {
+		output = document.getElementById("output");
+        testWebSocket();
+	}
+
+	function testWebSocket() {
+        name = getParameterByName("name");
+        team = getParameterByName("team");
+		websocket = new WebSocket(wsUri+"?name="+name+"&team="+team);
+		websocket.onopen = function(evt) {
+			onOpen(evt)
+		};
+		websocket.onclose = function(evt) {
+			onClose(evt)
+		};
+		websocket.onmessage = function(evt) {
+			onMessage(evt)
+		};
+		websocket.onerror = function(evt) {
+			onError(evt)
+		};
+		startTimer();
+	}
+
+	function onOpen(evt) {
+		writeToScreen("CONNECTED");
+        doSend({type:"log",text:"foobar"}); // currently accepts only true, false or null, otherwise exception is thrown, need to investigate
+	}
+
+	function onClose(evt) {
+		writeToScreen("DISCONNECTED");
+	}
+
+	function onMessage(evt) {
+		writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data
+				+ '</span>');
+		//websocket.close();
+	}
+
+	function onError(evt) {
+		writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+	}
+
+	function doSend(message) {
+        var stringified = JSON.stringify(message);
+		writeToScreen("SENT: " + stringified);
+
+		websocket.send(stringified);
+	}
+
+	function writeToScreen(message) {
+		var pre = document.createElement("p");
+		pre.style.wordWrap = "break-word";
+		pre.innerHTML = message;
+		output.appendChild(pre);
+	}
+
+	window.addEventListener("load", init, false);
+
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+    
+    function startTimer() {
+    	interval = window.setInterval(navTimer, 200);
+    }
+    
+    function stopTimer() {
+    	window.clearInterval(interval);
+    }
+
+    function navTimer() {
+		var dao = {
+    		    type: "navigation",
+    		    user_nick: name,
+    		    current_x: 1.0,
+    		    current_y: 1.0,
+    		    x_prim: 2.0,
+    		    y_prim: 1.0
+    		};
+    	doSend(dao);
+    }
 </script>
 
 <h2>WebSocket Test</h2>
