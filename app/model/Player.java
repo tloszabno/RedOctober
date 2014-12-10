@@ -3,6 +3,7 @@ package model;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @XmlRootElement
@@ -18,6 +19,7 @@ public class Player {
 		this.team = team;
 		this.xPosition = xPosition;
 		this.yPosition = yPosition;
+
 		this.xDirection = randomV();
 		this.yDirection = randomV();
 	}
@@ -51,6 +53,7 @@ public class Player {
 	public double getyDirection() {
 		return yDirection;
 	}
+
 	@JsonIgnore
 	public void setyDirection(double yDirection) {
 		this.yDirection = yDirection;

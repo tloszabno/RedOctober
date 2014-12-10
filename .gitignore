@@ -5,6 +5,7 @@ logs
 out
 target
 project
+.idea_modules
 
 /.metadata
 /.classpath

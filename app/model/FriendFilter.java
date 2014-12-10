@@ -10,11 +10,11 @@ public class FriendFilter {
 	private Player my;
 	private List<Player> all_players;
 	private double intervals;
-	
+
 	enum Filter{
 		FRIENDS,ENEMIES;
 	}
-	
+
 	public FriendFilter(Player my, List<Player> all, double intervals){
 		this.my = my;
 		this.all_players = all;

@@ -13,6 +13,7 @@ public class Board {
 
 	private double width = 1000.0;
 	private double height = 500.0;
+
 	private Map<String, Player> players;
 
 	public Board() {
@@ -53,7 +54,7 @@ public class Board {
 	public String getType(){
 		return "map_init_configuration";
 	}
-	
+
 	@JsonProperty("type")
 	public void setType(String type) {
 		type = type.replaceAll("\"", "");
@@ -62,12 +63,12 @@ public class Board {
 			throw new RuntimeException(message);
 		}
 	}
-	
+
 	@JsonProperty("x_size")
 	public double getWidth() {
 		return width;
 	}
-	
+
 	public void setWidth(double w){
 		this.width = w;
 	}
@@ -76,7 +77,7 @@ public class Board {
 	public double getHeight() {
 		return height;
 	}
-	
+
 	public void setHeight(double w){
 		this.height = w;
 	}
