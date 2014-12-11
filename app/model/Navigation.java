@@ -21,7 +21,9 @@ public class Navigation{
 	
 	@JsonIgnore
 	public void setPlayer(Player player){
+
 		this.player = player;
+
 	}
 	
 	@JsonIgnore

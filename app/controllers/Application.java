@@ -1,7 +1,8 @@
 package controllers;
 
 import play.mvc.*;
-import views.html.map;
+
+
 
 public class Application extends Controller {
     
@@ -9,8 +10,8 @@ public class Application extends Controller {
         return ok(views.html.websocket.render());
     }
 
-    public static Result map() {
-        return ok(map.render());
+    public static Result map(String name, String team) {
+        return ok(views.html.map.render(name, team));
     }
 
 

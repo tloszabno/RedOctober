@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @XmlRootElement
 public class TimeConfiguration {
-	private int rate = 2000;
-	private int start_delay = 2000;
+	private int rate = 200;
+	private int start_delay = 1000;
 	
 	@JsonProperty("rate")
 	public int getRate() {

@@ -41,7 +41,7 @@ function Controller() {
      *  INVOKE THIS FUNCTION WHEN NEED TO GET NAVIGATION MESSAGE TO SERVER
      **/
     this.get_navigation = function(){
-        log("[Entry] get_navigation");
+        //log("[Entry] get_navigation");
 
         var current_x = map.getXPosition();
         var current_y = map.getYPosition();
@@ -49,14 +49,14 @@ function Controller() {
         var dx = current_x - position_cache[my_ship_name].previous_x;
         var dy = current_y - position_cache[my_ship_name].previous_y;
 
-        log("Current x=" + current_x + "Current y=" + current_y + " dx=" + dx + " dy=" + dy)
+        //log("Current x=" + current_x + "Current y=" + current_y + " dx=" + dx + " dy=" + dy)
 
         refresh_position_cache(my_ship_name, current_x, current_y);
 
         var current_velocity = map.getSpeed();
 
         // TODO: get user nick from some hidden input
-        var user_nick = "name";
+        var user_nick = $("#userName").val();
 
         var message = {
             type: "navigation",
@@ -67,7 +67,7 @@ function Controller() {
             y_prim: dy
         };
 
-        log("[Exit] get_navigation");
+        //log("[Exit] get_navigation");
         return message;
     };
 
@@ -76,16 +76,16 @@ function Controller() {
     // ********
 
     function handle_init_map(commandObject) {
-        log("[Entry] handle_init_map");
+        //log("[Entry] handle_init_map");
 
-        var map_x = commandObject.x_size;
-        var map_y = commandObject.y_size;
-        log(" got map_x=" + map_x + " map_y=" + map_y);
+        self.map_x = commandObject.x_size;
+        self.map_y = commandObject.y_size;
+        //log(" got map_x=" + self.map_x + " map_y=" + self.map_y);
 
-        map = new SubMap(map_x, map_y);
+        map = new SubMap(self.map_x, self.map_y);
         put_map_to_html();
 
-        log("[Exit] handle_init_map");
+        //log("[Exit] handle_init_map");
     }
 
     function add_or_move_ships(ships, ship_type) {
@@ -105,12 +105,11 @@ function Controller() {
 
     var set_position_request_invocations = 0;
     function handle_set_positions_request(commandObject, sendToServerFunction) {
-        log("[Entry] handle_set_positions_request");
+        //log("[Entry] handle_set_positions_request");
 
         if(set_position_request_invocations > 0 && sendToServerFunction !== undefined){
             var msg = self.get_navigation();
         }
-
         set_ships_positions(commandObject);
 
         if( msg !== undefined ) {
@@ -119,12 +118,12 @@ function Controller() {
 
 
         set_position_request_invocations++;
-        log("[Exit] handle_set_positions_request");
+        //log("[Exit] handle_set_positions_request");
     }
 
     function set_ships_positions(commandObject){
         var my_ship = commandObject.my;
-        if( my_ship !== undefined ) {
+        if( my_ship !== undefined && set_position_request_invocations < 1) {
             log("Putting mine ship to [" + my_ship.x + "," + my_ship.y + "]");
             // TODO: move angle to config or server - to consideration
 
