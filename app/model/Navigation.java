@@ -101,10 +101,10 @@ public class Navigation{
 	}
 	
 	public Double getNext_x() {
-		return current_x+x_prim;
+		return current_x;//+x_prim;
 	}
 	
 	public Double getNext_y() {
-		return current_y+y_prim;
+		return current_y;//+y_prim;
 	}
 }
