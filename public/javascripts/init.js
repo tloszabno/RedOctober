@@ -13,8 +13,8 @@
 	}
 
 	function testWebSocket() {
-        var name = $("#userName").val();//getParameterByName("name");
-        var team = $("#teamName").val();//getParameterByName("team");
+        var name = $("#userName").val();
+        var team = $("#teamName").val();
 
 		websocket = new WebSocket(wsUri+"?name="+name+"&team="+team);
 		websocket.onopen = function(evt) {

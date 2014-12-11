@@ -41,21 +41,15 @@ function Controller() {
      *  INVOKE THIS FUNCTION WHEN NEED TO GET NAVIGATION MESSAGE TO SERVER
      **/
     this.get_navigation = function(){
-        //log("[Entry] get_navigation");
-
         var current_x = map.getXPosition();
         var current_y = map.getYPosition();
 
         var dx = current_x - position_cache[my_ship_name].previous_x;
         var dy = current_y - position_cache[my_ship_name].previous_y;
 
-        //log("Current x=" + current_x + "Current y=" + current_y + " dx=" + dx + " dy=" + dy)
-
         refresh_position_cache(my_ship_name, current_x, current_y);
 
-        var current_velocity = map.getSpeed();
 
-        // TODO: get user nick from some hidden input
         var user_nick = $("#userName").val();
 
         var message = {
@@ -67,7 +61,6 @@ function Controller() {
             y_prim: dy
         };
 
-        //log("[Exit] get_navigation");
         return message;
     };
 
@@ -76,16 +69,11 @@ function Controller() {
     // ********
 
     function handle_init_map(commandObject) {
-        //log("[Entry] handle_init_map");
-
         self.map_x = commandObject.x_size;
         self.map_y = commandObject.y_size;
-        //log(" got map_x=" + self.map_x + " map_y=" + self.map_y);
 
         map = new SubMap(self.map_x, self.map_y);
         put_map_to_html();
-
-        //log("[Exit] handle_init_map");
     }
 
     function add_or_move_ships(ships, ship_type) {
@@ -94,7 +82,6 @@ function Controller() {
                 var ship = ships[i];
                 log("Putting ship to [" + ship.x + "," + ship.y + "] user_nick=" + ship.user_nick + " ship_type=" + ship_type);
 
-                // TODO: move angle to config or server - to consideration
                 var angel = compute_angel(ship.user_nick, ship.x, ship.y);
                 map.addOrMoveShip(ship.user_nick, ship.x, ship.y, angel, ship_type == SHIP_TYPE.Enemy ? SHIP_COLOR_OF.enemy : SHIP_COLOR_OF.friendly);
 
@@ -105,7 +92,6 @@ function Controller() {
 
     var set_position_request_invocations = 0;
     function handle_set_positions_request(commandObject, sendToServerFunction) {
-        //log("[Entry] handle_set_positions_request");
 
         if(set_position_request_invocations > 0 && sendToServerFunction !== undefined){
             var msg = self.get_navigation();
@@ -116,17 +102,13 @@ function Controller() {
             sendToServerFunction(msg);
         }
 
-
         set_position_request_invocations++;
-        //log("[Exit] handle_set_positions_request");
     }
 
     function set_ships_positions(commandObject){
         var my_ship = commandObject.my;
         if( my_ship !== undefined && set_position_request_invocations < 1) {
             log("Putting mine ship to [" + my_ship.x + "," + my_ship.y + "]");
-            // TODO: move angle to config or server - to consideration
-
             my_ship_name = MY_SHIP_CONFIG.default_id;
 
             var angel = compute_angel(my_ship_name, my_ship.x, my_ship.y);
@@ -153,6 +135,8 @@ function Controller() {
         var ev = e || window.event;
         var key = ev.keyCode;
 
+
+        var default_speed  = MY_SHIP_CONFIG.default_speed;
         switch (key) {
             case ARROW_KEYS.left:
                 map.setRotationSpeed(-0.7);
@@ -163,7 +147,7 @@ function Controller() {
                     map.setSpeed(0);
                 }
                 else{
-                    map.setSpeed(50);
+                    map.setSpeed(default_speed);
                 }
                 break;
 
@@ -176,7 +160,7 @@ function Controller() {
                     map.setSpeed(0);
                 }else{
                     // supose it's french ship, it can go reverse :)
-                    map.setSpeed(-50);
+                    map.setSpeed(-default_speed);
                 }
                 break;
 

@@ -6,11 +6,13 @@ var SHIP_COLOR_OF = {
 
 var MY_SHIP_CONFIG = {
     default_id : 0,
-    default_angel: - 1.0
-}
+    default_angel: - 1.0,
+    default_speed: 20
+};
+
 
 var SHIP_TYPE = {
     My: "My",
     Friendly:"Friendly",
     Enemy:"Enemy"
-}
+};
