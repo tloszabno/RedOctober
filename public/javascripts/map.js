@@ -1,7 +1,7 @@
 
 function SubMap(map_x_size, map_y_size) {
     var self = this;
-
+    var ships_array = [];
 
     var drawShip = function (name, x,y,rotation, color, isMy){
         var ctx = new PIXI.Graphics();
@@ -24,6 +24,9 @@ function SubMap(map_x_size, map_y_size) {
         ctx.name = name;
         ctx.addChild(text);
         ctx.color = color;
+
+        ships_array.push(ctx);
+
         return ctx;
     };
 
@@ -157,13 +160,21 @@ function SubMap(map_x_size, map_y_size) {
         }
     };
 
-    //TODO: implement me
+
     this.removeAllShipsWithoutMine = function(){
-        //bellow doesn't work
-        //var name = MY_SHIP_CONFIG.default_id;
-        //var myShips = stateShips[name];
-        //stateShips = new Object();
-        //stateShips[name] = myShips;
+        var my_ship_name = MY_SHIP_CONFIG.default_id;
+        ships_array.slice(0).forEach(function(el){
+            if( el.name !== my_ship_name ){
+                stage.removeChild(el);
+                // not efective and goot but has one benefit: it works :)
+
+                // FIXME: feel free to refator
+                var idx = ships_array.indexOf(el);
+                ships_array = ships_array.slice(0,idx).concat(ships_array.slice(idx+1, 0));
+
+                stateShips[el.name] = undefined;
+            }
+        });
     };
 }
 

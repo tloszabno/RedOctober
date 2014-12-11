@@ -7,7 +7,7 @@ var SHIP_COLOR_OF = {
 var MY_SHIP_CONFIG = {
     default_id : 0,
     default_angel: - 1.0,
-    default_speed: 100
+    default_speed: 30
 };
 
 

@@ -107,7 +107,10 @@ function Controller() {
 
     function set_ships_positions(commandObject){
 
-        map.removeAllShipsWithoutMine();
+        if( set_position_request_invocations > 0 ) {
+            map.removeAllShipsWithoutMine();
+        }
+
         var my_ship = commandObject.my;
         if( my_ship !== undefined && set_position_request_invocations < 1) {
             log("Putting mine ship to [" + my_ship.x + "," + my_ship.y + "]");
@@ -125,7 +128,6 @@ function Controller() {
         var friendly_ships = commandObject.friendly;
         add_or_move_ships(friendly_ships, SHIP_TYPE.Friendly);
     }
-
 
     function put_map_to_html(){
         document.body.appendChild ( map.getMap() ) ;
