@@ -17,16 +17,17 @@ function Controller() {
     var map;
     var my_ship_name;
     var position_cache = {};
+    var self = this;
 
 
     /**
      *  INVOKE THIS FUNCTION ON MESSAGE FROM SERVER
      **/
-    this.dispatch =  function(commandObject) {
+    this.dispatch =  function(commandObject, sendToServerFunction) {
         var type = commandObject.type;
         switch (type) {
             case "position":
-                handle_set_positions(commandObject);
+                handle_set_positions_request(commandObject,sendToServerFunction);
                 break;
             case "map_init_configuration":
                 handle_init_map(commandObject);
@@ -48,12 +49,14 @@ function Controller() {
         var dx = current_x - position_cache[my_ship_name].previous_x;
         var dy = current_y - position_cache[my_ship_name].previous_y;
 
+        log("Current x=" + current_x + "Current y=" + current_y + " dx=" + dx + " dy=" + dy)
+
         refresh_position_cache(my_ship_name, current_x, current_y);
 
         var current_velocity = map.getSpeed();
 
         // TODO: get user nick from some hidden input
-        var user_nick = 0;
+        var user_nick = "name";
 
         var message = {
             type: "navigation",
@@ -61,8 +64,7 @@ function Controller() {
             current_x: current_x,
             current_y: current_y,
             x_prim: dx,
-            y_prim: dy,
-            current_velocity: current_velocity
+            y_prim: dy
         };
 
         log("[Exit] get_navigation");
@@ -101,9 +103,26 @@ function Controller() {
         }
     }
 
-    function handle_set_positions(commandObject) {
-        log("[Entry] handle_set_positions");
+    var set_position_request_invocations = 0;
+    function handle_set_positions_request(commandObject, sendToServerFunction) {
+        log("[Entry] handle_set_positions_request");
 
+        if(set_position_request_invocations > 0 && sendToServerFunction !== undefined){
+            var msg = self.get_navigation();
+        }
+
+        set_ships_positions(commandObject);
+
+        if( msg !== undefined ) {
+            sendToServerFunction(msg);
+        }
+
+
+        set_position_request_invocations++;
+        log("[Exit] handle_set_positions_request");
+    }
+
+    function set_ships_positions(commandObject){
         var my_ship = commandObject.my;
         if( my_ship !== undefined ) {
             log("Putting mine ship to [" + my_ship.x + "," + my_ship.y + "]");
@@ -122,9 +141,8 @@ function Controller() {
 
         var friendly_ships = commandObject.friendly;
         add_or_move_ships(friendly_ships, SHIP_TYPE.Friendly);
-
-        log("[Exit] handle_set_positions");
     }
+
 
     function put_map_to_html(){
         document.body.appendChild ( map.getMap() ) ;

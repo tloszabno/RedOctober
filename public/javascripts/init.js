@@ -5,14 +5,16 @@
 	var data;
 	var root;
 
+	var websocket;
+
 	function init() {
 	    controller = new Controller();
 	    testWebSocket();
 	}
 
 	function testWebSocket() {
-        var name = getParameterByName("name");
-        var team = getParameterByName("team");
+        var name = "name";//getParameterByName("name");
+        var team = "2";//getParameterByName("team");
 
 		websocket = new WebSocket(wsUri+"?name="+name+"&team="+team);
 		websocket.onopen = function(evt) {
@@ -40,11 +42,12 @@
 
 	function onMessage(evt) {
 		console.log("MSG from server=" + evt.data);
-		controller.dispatch(JSON.parse(evt.data))
+
+
+		controller.dispatch(JSON.parse(evt.data), doSend)
 		//writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data
 		//		+ '</span>');
 		//websocket.close();
-		///doSend(controller.get_navigation());
 	}
 
 	function onError(evt) {
