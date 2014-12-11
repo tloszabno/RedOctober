@@ -106,6 +106,8 @@ function Controller() {
     }
 
     function set_ships_positions(commandObject){
+
+        map.removeAllShipsWithoutMine();
         var my_ship = commandObject.my;
         if( my_ship !== undefined && set_position_request_invocations < 1) {
             log("Putting mine ship to [" + my_ship.x + "," + my_ship.y + "]");

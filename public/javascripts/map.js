@@ -1,6 +1,9 @@
 
 function SubMap(map_x_size, map_y_size) {
-    var drawShip = function (name, x,y,rotation, color){
+    var self = this;
+
+
+    var drawShip = function (name, x,y,rotation, color, isMy){
         var ctx = new PIXI.Graphics();
         var text = new PIXI.Text(name, {font:"15px Arial", fill:"black"});
         text.position.x = -4;
@@ -10,7 +13,11 @@ function SubMap(map_x_size, map_y_size) {
         ctx.beginFill(0x999999);
         ctx.drawCircle(0, 0, 10);
         ctx.moveTo(0, 10);
-        ctx.lineTo(0, 18);
+
+        if( isMy == true) {
+            ctx.lineTo(0, 18);
+        }
+
         ctx.position.x = x;
         ctx.position.y = y;
         ctx.rotation = rotation;
@@ -22,7 +29,7 @@ function SubMap(map_x_size, map_y_size) {
 
 
 // main view of PIXI Canvas
-    var stage = new PIXI.Stage(0x66FF99);
+    var stage = new PIXI.Stage(0x66CCFF);
 // create a renderer instance
     var renderer = PIXI.autoDetectRenderer(map_x_size,  map_y_size);
 
@@ -46,7 +53,7 @@ function SubMap(map_x_size, map_y_size) {
     var animate = function () {
         nowTime = Date.now();
         deltatime = (nowTime - lastTime) / 1000;
-        lastTime = nowTime
+        lastTime = nowTime;
 
         if( mainShip !== undefined ) {
             mainShip.rotation += dalfa * deltatime;
@@ -56,11 +63,23 @@ function SubMap(map_x_size, map_y_size) {
             mainShip.position.x = (mainShip.position.x % renderer.width);
             mainShip.position.y = (mainShip.position.y % renderer.height);
 
+            // handle situations when ships whant to move outside borders
             if (mainShip.position.x < 0) {
-                mainShip.position.x += renderer.width
+                mainShip.position.x += 1;//renderer.width;
+                self.setSpeed(0);
             }
-            if (mainShip.position.y < 0) {
-                mainShip.position.y += renderer.height
+            if (mainShip.position.y < 0 ) {
+                mainShip.position.y += 1;//renderer.height;
+                self.setSpeed(0);
+            }
+            // 10 is ship diameter
+            if (mainShip.position.x + 10 >= map_x_size) {
+                mainShip.position.x -= 1;//renderer.width;
+                self.setSpeed(0);
+            }
+            if (mainShip.position.y + 10 >= map_y_size ) {
+                mainShip.position.y -= 1;//renderer.height;
+                self.setSpeed(0);
             }
 
         }
@@ -72,30 +91,28 @@ function SubMap(map_x_size, map_y_size) {
 
     requestAnimFrame(animate);
 
-
-
     // API
     this.getMap = function (){
-        return map
+        return map;
     };
 
     this.setSpeed = function (v) {
-        speed = v
+        speed = v;
     };
     this.setRotationSpeed = function (rotationSpeed) {
-        dalfa = rotationSpeed
+        dalfa = rotationSpeed;
     };
 
     this.getXPosition = function () {
-        return mainShip.position.x
+        return mainShip.position.x;
     };
 
     this.getYPosition = function () {
-        return mainShip.position.y
+        return mainShip.position.y;
     };
 
     this.getRotation = function () {
-        return mainShip.rotation
+        return mainShip.rotation;
     };
 
     this.getSpeed = function(){
@@ -118,10 +135,10 @@ function SubMap(map_x_size, map_y_size) {
 
     this.putMyShip = function(x,y,angle, color){
         var name = MY_SHIP_CONFIG.default_id;
-        mainShip = drawShip(name, x,y, angle, color);
+        mainShip = drawShip(name, x,y, angle, color, true);
         stateShips[name] = mainShip;
         stage.addChild(mainShip);
-    }
+    };
 
     this.putOrMoveMainShip = function(x,y,angle, color){
         if( mainShip === undefined){
@@ -129,8 +146,7 @@ function SubMap(map_x_size, map_y_size) {
         }else{
             this.moveShip(MY_SHIP_CONFIG.default_id,x,y,angle,color);
         }
-    }
-
+    };
 
     this.addOrMoveShip = function(name, x, y, angle, color){
         var ship = stateShips[name];
@@ -139,7 +155,16 @@ function SubMap(map_x_size, map_y_size) {
         } else {
             this.moveShip(name, x, y, angle, color);
         }
-    }
+    };
+
+    //TODO: implement me
+    this.removeAllShipsWithoutMine = function(){
+        //bellow doesn't work
+        //var name = MY_SHIP_CONFIG.default_id;
+        //var myShips = stateShips[name];
+        //stateShips = new Object();
+        //stateShips[name] = myShips;
+    };
 }
 
 
