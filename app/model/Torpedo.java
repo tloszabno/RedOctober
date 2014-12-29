@@ -1,3 +1,5 @@
+package model;
+
 public class Torpedo extends MovingObject {
 
 	private final double range = 50.0d;

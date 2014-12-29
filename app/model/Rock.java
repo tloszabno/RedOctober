@@ -1,3 +1,5 @@
+package model;
+
 public class Rock extends GameObject {
 
 	private double sizeRadius = 15.0d;

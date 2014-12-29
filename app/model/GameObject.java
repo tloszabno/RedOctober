@@ -1,3 +1,7 @@
+package model;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class GameObject {
 
 	private double x, y;

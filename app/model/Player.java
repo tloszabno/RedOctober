@@ -7,26 +7,29 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @XmlRootElement
-public class Player {
+public class Player extends MovingObject{
 
 	private String nick;
 	private String team;
 	private double xPosition, yPosition;
 	private double xDirection, yDirection;
 	
-	public Player(String nick, String team, double xPosition, double yPosition) {
+	//Możliwe że Player powinien rozszerzać MovingObject, ale wtedy w tym konstruktorze
+	//musiałyby być też przemieszczenia x i y łodzi
+	public Player(String nick, String team, double xPosition, double yPosition, double xDirection, double yDirection) {
+		super(xPosition, yPosition, xDirection, yDirection);
 		this.nick = nick;
 		this.team = team;
 		this.xPosition = xPosition;
 		this.yPosition = yPosition;
 
-		this.xDirection = randomV();
-		this.yDirection = randomV();
+		this.xDirection = xDirection; //randomV();
+		this.yDirection = yDirection; //randomV();
 	}
 
-	private double randomV() {
+	/*private double randomV() {
 		return Math.random()*10.0-5.0;
-	}
+	}*/
 	
 	@JsonProperty("x")
 	public double getxPosition() {
