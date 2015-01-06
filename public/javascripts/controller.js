@@ -170,9 +170,7 @@ function Controller() {
                 break;
 
             case 17:
-
-                var torpedoSpeed = 70;
-                map.launch(torpedoSpeed);
+                map.launch();
                 break
 
             default :
@@ -201,9 +199,7 @@ function Controller() {
                 break;
 
             case 17:
-
-                var torpedoSpeed = 70;
-                map.launch(torpedoSpeed);
+                map.launch();
                 break
 
             default :

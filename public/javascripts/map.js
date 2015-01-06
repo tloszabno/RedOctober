@@ -2,6 +2,7 @@
 function SubMap(map_x_size, map_y_size) {
     var self = this;
     var ships_array = [];
+    var torpedoes = []
 
     var drawShip = function (name, x,y,rotation, color, isMy){
         var ctx = new PIXI.Graphics();
@@ -13,7 +14,7 @@ function SubMap(map_x_size, map_y_size) {
         ctx.beginFill(0x999999);
         ctx.drawCircle(0, 0, 10);
         ctx.endFill();
-        ctx.lineStyle(1, "red")
+        ctx.lineStyle(1, color)
         ctx.drawCircle(0, 0, 100)
         ctx.moveTo(0, 10);
 
@@ -50,14 +51,15 @@ function SubMap(map_x_size, map_y_size) {
     var deltatime = 0;
     var lastTime = Date.now();
     var nowTime = Date.now();
-    var torpedoReload = 1
+    var torpedoSpeed = 70
+    var torpedoReloadTime = 1
     var torpedoReleaseTime = Date.now();
 
     var speed = 0;
     var dalfa = 0;
 
     var mainShip = undefined;
-    var torpedoes = []
+
 
     var animate = function () {
         nowTime = Date.now();
@@ -125,6 +127,30 @@ function SubMap(map_x_size, map_y_size) {
     this.getMap = function (){
         return map;
     };
+
+    this.setTorpedoReleaseTime = function (releaseTime) {
+        torpedoReleaseTime = releaseTime
+    }
+
+    this.getTorpedoReleaseTime = function(){
+        return torpedoReleaseTime
+    }
+
+    this.setTorpedoReloadTime = function(time){
+        torpedoReloadTime = time
+    }
+
+    this.getTorpedoReloadTime = function(){
+        return torpedoReloadTime
+    }
+
+    this.setTorpedoSpeed = function(x){
+        torpedoSpeed = x
+    }
+
+    this.getTorpedoSpeed = function(){
+        return torpedoSpeed
+    }
 
     this.setSpeed = function (v) {
         speed = v;
@@ -206,29 +232,24 @@ function SubMap(map_x_size, map_y_size) {
         });
     };
 
-    this.launch = function(torpedoSpeed){
-        if (((Date.now() - torpedoReleaseTime)/1000) > torpedoReload ){
+    this.launch = function(){
+        if (((Date.now() - torpedoReleaseTime)/1000) > torpedoReloadTime ){
             torpedoReleaseTime = Date.now();
             var rot = mainShip.rotation
-            log("launch")
-            this.addTorpedo(mainShip.position.x + Math.sin(-rot)*20, mainShip.position.y + Math.cos(rot)*20, rot, torpedoSpeed)
+            this.addTorpedo(mainShip.position.x + Math.sin(-rot)*20, mainShip.position.y + Math.cos(rot)*20, rot)
         }
-        //var torpedo = stage.getChildAt(0)
-        //torpedo.rotation = rot
-        //torpedo.position.x = mainShip.position.x + Math.sin(-rot)*20
-        //torpedo.position.y = mainShip.position.y + Math.cos(rot)*20
     }
 
-    this.addTorpedo = function(x, y, rot, torpedoSpeed){
-        log("add torpedo")
+    this.addTorpedo = function(x, y, rot){
+
         var torpedo = new PIXI.Graphics();
         torpedo.lineStyle(3,"black" );
         torpedo.drawCircle(0, 0, 1);
         torpedo.position.x = x
         torpedo.position.y = y
         torpedo.rotation = rot
-        distance = 1000;
-        torpedoes.push([torpedo, distance, torpedoSpeed])
+        torpedoRange = 1000;
+        torpedoes.push([torpedo, torpedoRange, torpedoSpeed])
 
         stage.addChild(torpedo)
     }
