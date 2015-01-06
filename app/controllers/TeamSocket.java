@@ -1,9 +1,12 @@
 package controllers;
 
+import java.util.List;
+
 import model.Board;
 import model.FriendFilter;
 import model.Navigation;
 import model.Player;
+import model.Torpedo;
 import play.libs.F;
 import play.libs.F.Callback0;
 import play.libs.Json;
@@ -58,7 +61,8 @@ public class TeamSocket extends WebSocket<String> {
 
 	private void sendUsersToSocket(play.mvc.WebSocket.Out<String> out) {
 		double radar_range = game.getBoard().getRadarRadius();
-		FriendFilter filter = new FriendFilter(my, game.getPlayers(), game.getIntervals(), radar_range);
+		List<Torpedo> torpedos = game.getObjects().getTorpedos();
+		FriendFilter filter = new FriendFilter(my, game.getPlayers(), torpedos, game.getIntervals(), radar_range);
 		out.write(Json.toJson(filter).toString());
 	}
 

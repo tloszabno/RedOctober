@@ -6,10 +6,12 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import model.Board;
+import model.GameObjectRepository;
 import model.MovingObject;
 import model.Navigation;
 import model.Player;
 import model.PlayerRepository;
+import model.Torpedo;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
@@ -19,6 +21,7 @@ public class GameController {
 	private ActorSystem system;
 	private ActorRef queue;
     private PlayerRepository players;
+    private GameObjectRepository objects;
     private Map<TeamSocket, Player> sockets;
     private Board board;
     private ConcurrentLinkedQueue<Navigation> concurrentQueue;
@@ -27,6 +30,7 @@ public class GameController {
 	public GameController(){
         system=ActorSystem.create("RedOctober");
         concurrentQueue = new ConcurrentLinkedQueue<Navigation>();
+        objects = new GameObjectRepository();
 		setPlayers(new PlayerRepository());
         setSockets(new HashMap<TeamSocket, Player>());
         setBoard(new Board());
@@ -101,6 +105,10 @@ public class GameController {
 
 	public double getIntervals() {
 		return timeconfig.getRate()/1000.0;
+	}
+
+	public GameObjectRepository getObjects() {
+		return objects;
 	}
 
 }
