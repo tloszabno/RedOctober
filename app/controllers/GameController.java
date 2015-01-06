@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import model.Board;
+import model.MovingObject;
 import model.Navigation;
 import model.Player;
 import model.PlayerRepository;
@@ -36,9 +37,9 @@ public class GameController {
 	}
 	
 	public void disconnect(TeamSocket teamSocket) {
-		Player player = sockets.get(teamSocket);
+		MovingObject player = sockets.get(teamSocket);
 		sockets.remove(teamSocket);
-		System.out.println("disconnecting:" + player);
+		//System.out.println("disconnecting:" + player);
 		players.disconnectPlayer(player);
 		broadcast();
 	}

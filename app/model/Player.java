@@ -11,8 +11,8 @@ public class Player extends MovingObject{
 
 	private String nick;
 	private String team;
-	private double xPosition, yPosition;
-	private double xDirection, yDirection;
+	//private double xPosition, yPosition;
+	//private double xDirection, yDirection;
 	
 	//Możliwe że Player powinien rozszerzać MovingObject, ale wtedy w tym konstruktorze
 	//musiałyby być też przemieszczenia x i y łodzi
@@ -20,11 +20,11 @@ public class Player extends MovingObject{
 		super(xPosition, yPosition, xDirection, yDirection);
 		this.nick = nick;
 		this.team = team;
-		this.xPosition = xPosition;
-		this.yPosition = yPosition;
+		//this.xPosition = xPosition;
+		//this.yPosition = yPosition;
 
-		this.xDirection = xDirection; //randomV();
-		this.yDirection = yDirection; //randomV();
+		//this.xDirection = xDirection; //randomV();
+		//this.yDirection = yDirection; //randomV();
 	}
 
 	/*private double randomV() {
@@ -33,33 +33,33 @@ public class Player extends MovingObject{
 	
 	@JsonProperty("x")
 	public double getxPosition() {
-		return xPosition;
+		return this.x;
 	}
 	public void setxPosition(double xPosition) {
-		this.xPosition = xPosition;
+		this.x = xPosition;
 	}
 	@JsonProperty("y")
 	public double getyPosition() {
-		return yPosition;
+		return y;
 	}
 	public void setyPosition(double yPosition) {
-		this.yPosition = yPosition;
+		this.y = yPosition;
 	}
 	@JsonProperty("xDirection")
 	public double getxDirection() {
-		return xDirection;
+		return this.deltaX;
 	}
 	public void setxDirection(double xDirection) {
-		this.xDirection = xDirection;
+		this.deltaX = xDirection;
 	}
 	@JsonProperty("yDirection")
 	public double getyDirection() {
-		return yDirection;
+		return this.deltaY;
 	}
 
 	@JsonIgnore
 	public void setyDirection(double yDirection) {
-		this.yDirection = yDirection;
+		this.deltaY = yDirection;
 	}
 
 	@JsonProperty("user_nick")
@@ -76,11 +76,6 @@ public class Player extends MovingObject{
 		this.team = team;
 	}
 	
-	public void move() {
-		xPosition += xDirection;
-		yPosition += yDirection;
-	}
-
 	@Override
 	public String toString(){
 		return "name:"+nick+" team:"+team;

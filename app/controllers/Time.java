@@ -29,7 +29,7 @@ private GameController controller;
 	public void run() {
 		while(!queue.isEmpty()){
 			Navigation item = queue.remove();
-			System.out.println("Processing:"+item.toString());
+			//System.out.println("Processing:"+item.toString());
             processNavigation(item);
 		}
 		controller.broadcast();

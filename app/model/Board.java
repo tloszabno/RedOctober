@@ -13,6 +13,7 @@ public class Board {
 
 	private double width = 1000.0;
 	private double height = 500.0;
+	private double radar_radius = 100.0;
 
 	private Map<String, Player> players;
 
@@ -45,7 +46,7 @@ public class Board {
 	}
 	
 	public void nextStep() {
-		for(Player player : players.values()) {
+		for(MovingObject player : players.values()) {
 			player.move();
 		}
 	}
@@ -80,6 +81,15 @@ public class Board {
 
 	public void setHeight(double w){
 		this.height = w;
+	}
+	
+	@JsonProperty("radar_radius")
+	public double getRadarRadius(){
+		return this.radar_radius;
+	}
+	
+	public void setRadarRadius(double radius){
+		this.radar_radius = radius;
 	}
 	
 	//@JsonProperty("initial_velocity")

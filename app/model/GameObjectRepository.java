@@ -60,7 +60,7 @@ public class GameObjectRepository {
 			torpedos.remove((Torpedo) object);
 		
 		if( object instanceof Player )
-			players.remove((Player) object);
+			players.remove((MovingObject) object);
 	}
 }
 
