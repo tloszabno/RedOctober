@@ -141,6 +141,7 @@ function Controller() {
 
 
         var default_speed  = MY_SHIP_CONFIG.default_speed;
+
         switch (key) {
             case ARROW_KEYS.left:
                 map.setRotationSpeed(-0.7);
@@ -168,6 +169,12 @@ function Controller() {
                 }
                 break;
 
+            case 17:
+
+                var torpedoSpeed = 70;
+                map.launch(torpedoSpeed);
+                break
+
             default :
                 return;
         }
@@ -193,6 +200,11 @@ function Controller() {
             case ARROW_KEYS.down:
                 break;
 
+            case 17:
+
+                var torpedoSpeed = 70;
+                map.launch(torpedoSpeed);
+                break
 
             default :
                 return;

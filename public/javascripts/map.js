@@ -12,6 +12,9 @@ function SubMap(map_x_size, map_y_size) {
 
         ctx.beginFill(0x999999);
         ctx.drawCircle(0, 0, 10);
+        ctx.endFill();
+        ctx.lineStyle(1, "red")
+        ctx.drawCircle(0, 0, 100)
         ctx.moveTo(0, 10);
 
         if( isMy == true) {
@@ -47,16 +50,20 @@ function SubMap(map_x_size, map_y_size) {
     var deltatime = 0;
     var lastTime = Date.now();
     var nowTime = Date.now();
+    var torpedoReload = 1
+    var torpedoReleaseTime = Date.now();
 
     var speed = 0;
     var dalfa = 0;
 
     var mainShip = undefined;
+    var torpedoes = []
 
     var animate = function () {
         nowTime = Date.now();
         deltatime = (nowTime - lastTime) / 1000;
         lastTime = nowTime;
+
 
         if( mainShip !== undefined ) {
             mainShip.rotation += dalfa * deltatime;
@@ -86,6 +93,26 @@ function SubMap(map_x_size, map_y_size) {
             }
 
         }
+        for (i = torpedoes.length; i--;){
+            if (torpedoes[i][1] > 0 ){
+
+                var rot = torpedoes[i][0].rotation;
+
+                torpedoes[i][1] -= Math.abs(Math.sin(-rot) * torpedoes[i][2] * deltatime)+Math.abs(Math.cos(rot) * torpedoes[i][2] * deltatime)
+                torpedoes[i][0].position.x += Math.sin(-rot) * torpedoes[i][2] * deltatime;
+                torpedoes[i][0].position.y += Math.cos(rot) * torpedoes[i][2] * deltatime;
+
+
+
+            }else if (torpedoes[i][1] < 0){
+                torpedoes[i][0].position.x = -10
+                torpedoes[i][0].position.y = -10
+                stage.removeChild(torpedoes[i][0])
+                torpedoes.splice(i, 1)
+            }
+
+        }
+
         requestAnimFrame(animate);
         // render the stage
         renderer.render(stage);
@@ -127,6 +154,8 @@ function SubMap(map_x_size, map_y_size) {
         stateShips[name] = ship;
         stage.addChild(ship)
     };
+
+
 
     this.moveShip = function (name, x,y, angle, color) {
         var ship = stateShips[name];
@@ -176,6 +205,33 @@ function SubMap(map_x_size, map_y_size) {
             }
         });
     };
+
+    this.launch = function(torpedoSpeed){
+        if (((Date.now() - torpedoReleaseTime)/1000) > torpedoReload ){
+            torpedoReleaseTime = Date.now();
+            var rot = mainShip.rotation
+            log("launch")
+            this.addTorpedo(mainShip.position.x + Math.sin(-rot)*20, mainShip.position.y + Math.cos(rot)*20, rot, torpedoSpeed)
+        }
+        //var torpedo = stage.getChildAt(0)
+        //torpedo.rotation = rot
+        //torpedo.position.x = mainShip.position.x + Math.sin(-rot)*20
+        //torpedo.position.y = mainShip.position.y + Math.cos(rot)*20
+    }
+
+    this.addTorpedo = function(x, y, rot, torpedoSpeed){
+        log("add torpedo")
+        var torpedo = new PIXI.Graphics();
+        torpedo.lineStyle(3,"black" );
+        torpedo.drawCircle(0, 0, 1);
+        torpedo.position.x = x
+        torpedo.position.y = y
+        torpedo.rotation = rot
+        distance = 1000;
+        torpedoes.push([torpedo, distance, torpedoSpeed])
+
+        stage.addChild(torpedo)
+    }
 }
 
 
