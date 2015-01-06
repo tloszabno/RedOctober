@@ -148,7 +148,7 @@ function SubMap() {
         var rot = mainShip.rotation
         var torpedo = stage.getChildAt(0)
         torpedo.rotation = rot
-        distance = 100
+        distance = 600
 
         torpedo.position.x = mainShip.position.x + Math.sin(-rot)*20
         torpedo.position.y = mainShip.position.y + Math.cos(rot)*20
