@@ -59,6 +59,7 @@ function SubMap(map_x_size, map_y_size) {
     var dalfa = 0;
 
     var mainShip = undefined;
+    var destroyed = false;
 
 
     var animate = function () {
@@ -67,7 +68,7 @@ function SubMap(map_x_size, map_y_size) {
         lastTime = nowTime;
 
 
-        if( mainShip !== undefined ) {
+        if( mainShip !== undefined && !destroyed ) {
             mainShip.rotation += dalfa * deltatime;
             mainShip.position.x += Math.sin(-mainShip.rotation) * speed * deltatime;
             mainShip.position.y += Math.cos(mainShip.rotation) * speed * deltatime;
@@ -104,8 +105,6 @@ function SubMap(map_x_size, map_y_size) {
                 torpedoes[i][0].position.x += Math.sin(-rot) * torpedoes[i][2] * deltatime;
                 torpedoes[i][0].position.y += Math.cos(rot) * torpedoes[i][2] * deltatime;
 
-
-
             }else if (torpedoes[i][1] < 0){
                 torpedoes[i][0].position.x = -10
                 torpedoes[i][0].position.y = -10
@@ -115,9 +114,20 @@ function SubMap(map_x_size, map_y_size) {
 
         }
 
-        requestAnimFrame(animate);
+        if (destroyed) {
+            var texture = PIXI.Texture.fromImage("assets/images/explosion.png")
+            var sprite = new PIXI.Sprite(texture)
+
+            sprite.position.x = mainShip.position.x - 30
+            sprite.position.y = mainShip.position.y - 33
+            stage.addChild(sprite)
+
+        }
         // render the stage
+        requestAnimFrame(animate);
         renderer.render(stage);
+
+
 
     };
 
@@ -252,6 +262,15 @@ function SubMap(map_x_size, map_y_size) {
         torpedoes.push([torpedo, torpedoRange, torpedoSpeed])
 
         stage.addChild(torpedo)
+    }
+
+    this.destroy = function(destroyerName){
+
+        destroyed = true
+        var text = new PIXI.Text("You were destroyed by player: " + destroyerName, {font:"30px Arial", fill:"red"});
+        text.position.x = 200;
+        text.position.y = map_y_size/2;
+        stage.addChild(text)
     }
 }
 

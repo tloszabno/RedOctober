@@ -202,6 +202,10 @@ function Controller() {
                 map.launch();
                 break
 
+            case 68:
+                map.destroy("Autodestruction");
+                break;
+
             default :
                 return;
         }
