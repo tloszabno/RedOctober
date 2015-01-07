@@ -7,7 +7,7 @@ import java.util.LinkedList;
  * Klasa do zarządzania torpedami na mapie
  */
 public class TorpedoRepository {
-    private LinkedList<Torpedo> torpedoes;
+    private LinkedList<Torpedo> torpedoes = new LinkedList<Torpedo>();
 
     public TorpedoRepository() {}
 
