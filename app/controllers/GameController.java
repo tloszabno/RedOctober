@@ -5,13 +5,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import model.Board;
-import model.Navigation;
-import model.Player;
-import model.PlayerRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import model.*;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
+import play.libs.Json;
 
 public class GameController {
 	
@@ -22,9 +21,11 @@ public class GameController {
     private Board board;
     private ConcurrentLinkedQueue<Navigation> concurrentQueue;
     private TimeConfiguration timeconfig;
+
+	private TorpedoRepository torpedoRepository = new TorpedoRepository();
     
 	public GameController(){
-        system=ActorSystem.create("RedOctober");
+		system=ActorSystem.create("RedOctober");
         concurrentQueue = new ConcurrentLinkedQueue<Navigation>();
 		setPlayers(new PlayerRepository());
         setSockets(new HashMap<TeamSocket, Player>());
@@ -75,6 +76,10 @@ public class GameController {
 
 	public ActorSystem getSystem() {
 		return system;
+	}
+
+	public TorpedoRepository getTorpedoRepository() {
+		return torpedoRepository;
 	}
 
 	public ActorRef getQueue() {
