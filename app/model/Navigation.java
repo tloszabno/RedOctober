@@ -14,16 +14,14 @@ public class Navigation{
 	private Double x_prim;
 	private Double y_prim;
 	private Player player;
+	private Torpedo torpedo; // zwykle jest nullem, nie jest nullem gdy gracz wystrzeli torpedę
 	
 	public Navigation(){
-		
 	}
 	
 	@JsonIgnore
 	public void setPlayer(Player player){
-
 		this.player = player;
-
 	}
 	
 	@JsonIgnore
@@ -106,5 +104,14 @@ public class Navigation{
 	
 	public Double getNext_y() {
 		return current_y+y_prim;
+	}
+
+	@JsonProperty("launched_torpedo")
+	public Torpedo getTorpedo() {
+		return torpedo;
+	}
+	@JsonProperty("launched_torpedo")
+	public void setTorpedo(Torpedo torpedo) {
+		this.torpedo = torpedo;
 	}
 }
