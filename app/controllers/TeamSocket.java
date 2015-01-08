@@ -61,7 +61,7 @@ public class TeamSocket extends WebSocket<String> {
 
 	private void sendUsersToSocket(play.mvc.WebSocket.Out<String> out) {
 		double radar_range = game.getBoard().getRadarRadius();
-		List<Torpedo> torpedos = game.getObjects().getTorpedos();
+		List<Torpedo> torpedos = game.getTorpedoRepository().getTorpedoes();
 		FriendFilter filter = new FriendFilter(my, game.getPlayers(), torpedos, game.getIntervals(), radar_range);
 		out.write(Json.toJson(filter).toString());
 	}

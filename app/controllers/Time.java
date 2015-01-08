@@ -32,14 +32,25 @@ private GameController controller;
 			//System.out.println("Processing:"+item.toString());
             processNavigation(item);
 		}
+		controller.getTorpedoRepository().update(); // przesuwanie torped po mapie
 		controller.broadcast();
+		controller.getTorpedoRepository().removeExplodedTorpedoes();
+		/*
+			Jeśli kogoś zastanawia czemu update -> broadcast -> removeExplodedTorpedoes
+			Update - przesuwamy po mapie torpedy, może się zdarzyć, że któraś wybuchnie, ale nie możemy jej usunąć z pamięci, bo trzeba wysłać tę informację wszystkim
+			Broadcast - rozsyłamy informacje o wszystkim, w tym o torpedach, które eksplodowały
+			RemoveExplodedTorpedoes - możemy z czystym sumieniem usunąć torpedy
+		 */
 	}
 
 	private void processNavigation(Navigation navigation) {
-		Player player =	navigation.getPlayer(); // jesteśmy pewni, że tu nie będzie nigdy nulla?
+ 		Player player =	navigation.getPlayer(); // jesteśmy pewni, że tu nie będzie nigdy nulla?
 		player.setxPosition(navigation.getNext_x());
 		player.setyPosition((navigation.getNext_y()));
-		//TODO Collisions, torpedoes, explosions
+		if(navigation.getTorpedo() != null) {
+			// player wystrzelił torpedę
+			controller.getTorpedoRepository().addTorpedo(navigation.getTorpedo());
+		}
 	}
 
 }

@@ -1,20 +1,28 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Torpedo extends MovingObject {
 
 	private final double range = 50.0d;
 	private double distance = 0.0d;
+	@JsonIgnore
+	private boolean hit = false;
 	private String striker_nick;
 
-	public Torpedo(String striker_nick, double x, double y, double deltaX, double deltaY) {
+	public Torpedo() { super(0, 0, 0, 0);}
+	public Torpedo(double x, double y, double deltaX, double deltaY) {
 		super(x, y, deltaX, deltaY);
-		this.striker_nick = striker_nick;
 	}
 
+	@JsonIgnore
 	public boolean isMoving() {
-		return distance < range;
+		return hit || distance < range;
+	}
+
+	public void explode() {
+		hit = true;
 	}
 
 	public void move() {
