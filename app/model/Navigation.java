@@ -113,5 +113,6 @@ public class Navigation{
 	@JsonProperty("launched_torpedo")
 	public void setTorpedo(Torpedo torpedo) {
 		this.torpedo = torpedo;
+		this.torpedo.setUserNick(this.user_nick);
 	}
 }

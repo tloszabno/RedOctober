@@ -12,8 +12,9 @@ public class Torpedo extends MovingObject {
 	private String striker_nick;
 
 	public Torpedo() { super(0, 0, 0, 0);}
-	public Torpedo(double x, double y, double deltaX, double deltaY) {
+	public Torpedo(String striker_nick, double x, double y, double deltaX, double deltaY) {
 		super(x, y, deltaX, deltaY);
+		this.striker_nick = striker_nick;
 	}
 
 	@JsonIgnore

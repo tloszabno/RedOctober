@@ -67,7 +67,11 @@ public class FriendFilter {
 	}
 
 	private Player findPlayerByName(String userNick) {
-		// TODO Auto-generated method stub
+		for (Player p : all_players) {
+			if (p.getNick().equalsIgnoreCase(userNick)) {
+				return p;
+			}
+		}
 		return null;
 	}
 
