@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public abstract class MovingObject extends GameObject{
 
-	private double deltaX, deltaY;
+	protected double deltaX, deltaY;
 
 	
 	public MovingObject(double x, double y, double deltaX, double deltaY) {
