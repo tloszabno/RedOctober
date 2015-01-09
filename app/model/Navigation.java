@@ -20,8 +20,10 @@ public class Navigation{
 	}
 	
 	@JsonIgnore
-	public void setPlayer(Player player){
+	public void setPlayer(Player player) {
 		this.player = player;
+		if(torpedo != null)
+			torpedo.setUserNick(getUser_nick());
 	}
 	
 	@JsonIgnore
@@ -111,8 +113,8 @@ public class Navigation{
 		return torpedo;
 	}
 	@JsonProperty("launched_torpedo")
-	public void setTorpedo(Torpedo torpedo) {
-		this.torpedo = torpedo;
+	public void setTorpedo(TorpedoAdapter torpedo) {
+		this.torpedo = torpedo.getTorpedo();
 		this.torpedo.setUserNick(this.user_nick);
 	}
 }
