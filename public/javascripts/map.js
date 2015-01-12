@@ -1,8 +1,9 @@
 
-function SubMap(map_x_size, map_y_size) {
+function SubMap(map_x_size, map_y_size, radar_radius) {
     var self = this;
     var ships_array = [];
     var torpedoes = []
+    var sprites = []
 
     var drawShip = function (name, x,y,rotation, color, isMy){
         var ctx = new PIXI.Graphics();
@@ -14,8 +15,6 @@ function SubMap(map_x_size, map_y_size) {
         ctx.beginFill(0x999999);
         ctx.drawCircle(0, 0, 10);
         ctx.endFill();
-        ctx.lineStyle(1, color)
-        ctx.drawCircle(0, 0, 100)
         ctx.moveTo(0, 10);
 
         if( isMy == true) {
@@ -33,6 +32,16 @@ function SubMap(map_x_size, map_y_size) {
 
         return ctx;
     };
+
+    var drawRadar = function (x, y,radar_radius){
+        var radar = new PIXI.Graphics();
+        radar.position.x = x
+        radar.position.y = y
+        radar.lineStyle(1, "red");
+        radar.drawCircle(0, 0, radar_radius);
+
+        return radar
+    }
 
 
 // main view of PIXI Canvas
@@ -60,7 +69,8 @@ function SubMap(map_x_size, map_y_size) {
 
     var mainShip = undefined;
     var destroyed = false;
-
+    var radar = drawRadar(-1000, -1000, radar_radius);
+    stage.addChild(radar)
 
     var animate = function () {
         nowTime = Date.now();
@@ -75,6 +85,9 @@ function SubMap(map_x_size, map_y_size) {
 
             mainShip.position.x = (mainShip.position.x % renderer.width);
             mainShip.position.y = (mainShip.position.y % renderer.height);
+
+            radar.position.x = mainShip.position.x
+            radar.position.y = mainShip.position.y
 
             // handle situations when ships whant to move outside borders
             if (mainShip.position.x < 0) {
@@ -96,22 +109,11 @@ function SubMap(map_x_size, map_y_size) {
             }
 
         }
+
         for (i = torpedoes.length; i--;){
-            if (torpedoes[i][1] > 0 ){
+            if (torpedoes[i].getExpoded == true){
 
-                var rot = torpedoes[i][0].rotation;
-
-                torpedoes[i][1] -= Math.abs(Math.sin(-rot) * torpedoes[i][2] * deltatime)+Math.abs(Math.cos(rot) * torpedoes[i][2] * deltatime)
-                torpedoes[i][0].position.x += Math.sin(-rot) * torpedoes[i][2] * deltatime;
-                torpedoes[i][0].position.y += Math.cos(rot) * torpedoes[i][2] * deltatime;
-
-            }else if (torpedoes[i][1] < 0){
-                torpedoes[i][0].position.x = -10
-                torpedoes[i][0].position.y = -10
-                stage.removeChild(torpedoes[i][0])
-                torpedoes.splice(i, 1)
             }
-
         }
 
         if (destroyed) {
@@ -121,8 +123,8 @@ function SubMap(map_x_size, map_y_size) {
             sprite.position.x = mainShip.position.x - 30
             sprite.position.y = mainShip.position.y - 33
             stage.addChild(sprite)
-
         }
+
         // render the stage
         requestAnimFrame(animate);
         renderer.render(stage);
@@ -187,11 +189,10 @@ function SubMap(map_x_size, map_y_size) {
 
     this.addShip = function(name, x, y , angle, color) {
         var ship = drawShip(name, x, y, angle, color);
+        //var radar = drawRadar(x, y, radar_radius)
         stateShips[name] = ship;
         stage.addChild(ship)
     };
-
-
 
     this.moveShip = function (name, x,y, angle, color) {
         var ship = stateShips[name];
@@ -205,6 +206,7 @@ function SubMap(map_x_size, map_y_size) {
         var name = MY_SHIP_CONFIG.default_id;
         mainShip = drawShip(name, x,y, angle, color, true);
         stateShips[name] = mainShip;
+        stage.addChild(radar)
         stage.addChild(mainShip);
     };
 
@@ -245,25 +247,23 @@ function SubMap(map_x_size, map_y_size) {
     this.launch = function(){
         if (((Date.now() - torpedoReleaseTime)/1000) > torpedoReloadTime ){
             torpedoReleaseTime = Date.now();
-            var rot = mainShip.rotation
-            this.addTorpedo(mainShip.position.x + Math.sin(-rot)*20, mainShip.position.y + Math.cos(rot)*20, rot)
+            torpedo = new Torpedo(mainShip.position.x, mainShip.position.y, true)
+
+            tor = []
+            tor.push(torpedo)
+            this.refreshTorpedos(tor)
+
         }
     }
 
-    this.addTorpedo = function(x, y, rot){
+    this.refreshTorpedos = function(torpedo_list){
+        this.destroyTorpedoes()
+        log(torpedo_list[0])
+        for (i = torpedo_list.length; i--;){
+            torpedo_list[i].addTorpedo()
+        }
 
-        var torpedo = new PIXI.Graphics();
-        torpedo.lineStyle(3,"black" );
-        torpedo.drawCircle(0, 0, 1);
-        torpedo.position.x = x
-        torpedo.position.y = y
-        torpedo.rotation = rot
-        torpedoRange = 1000;
-        torpedoes.push([torpedo, torpedoRange, torpedoSpeed])
-
-        stage.addChild(torpedo)
     }
-
     this.destroy = function(destroyerName){
 
         destroyed = true
@@ -271,6 +271,81 @@ function SubMap(map_x_size, map_y_size) {
         text.position.x = 200;
         text.position.y = map_y_size/2;
         stage.addChild(text)
+    }
+
+    this.destroyTorpedoes = function(){
+        for (i = torpedoes.length; i--;){
+            stage.removeChild(torpedoes[i])
+            torpedoes.splice(i, 1)
+        }
+        for (j = sprites.length; j--;){
+            stage.removeChild(sprites[j])
+            sprites.splice(j, 1)
+        }
+    }
+
+
+    function Torpedo(position_x, position_y, explode){
+        var x = position_x
+        var y = position_y
+        var exploded = explode
+
+        this.addTorpedo = function(){
+            var torpedo = new PIXI.Graphics();
+            if(exploded == false){
+                torpedo.lineStyle(3,"black" );
+                torpedo.drawCircle(0, 0, 1);
+
+                torpedo.position.x = x
+                torpedo.position.y = y
+            }
+
+            if (exploded == true){
+                var texture = PIXI.Texture.fromImage("assets/images/small_explosion.png")
+                var sprite = new PIXI.Sprite(texture)
+
+                sprite.alpha = 1
+                sprite.position.x = x - 6
+                sprite.position.y = y - 7
+                sprites.push(sprite)
+                torpedo.addChild(sprite)
+            }
+
+            stage.addChild(torpedo)
+
+            torpedoes.push(torpedo)
+
+
+        }
+
+        this.getTorpedoes = function(){
+            return torpedoes
+        }
+
+
+        this.setExploded = function(isExploded){
+            this.exploded = isExploded
+        }
+
+        this.getExpoded = function (){
+            return exploded
+        }
+
+        this.setX = function (position_x){
+            this.x = position_x
+        }
+
+        this.getX = function (){
+            return x
+        }
+
+        this.setY = function (position_y){
+            this.y = position_y
+        }
+
+        this.getY = function (){
+            return y
+        }
     }
 }
 
