@@ -71,9 +71,9 @@ function Controller() {
     function handle_init_map(commandObject) {
         self.map_x = commandObject.x_size;
         self.map_y = commandObject.y_size;
-        radar_radius = 100; // TODO
+        self.radar_radius = commandObject.radar_radius;
 
-        map = new SubMap(self.map_x, self.map_y, radar_radius);
+        map = new SubMap(self.map_x, self.map_y, self.radar_radius);
         put_map_to_html();
     }
 
