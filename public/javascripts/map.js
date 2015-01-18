@@ -138,27 +138,27 @@ function SubMap(map_x_size, map_y_size, radar_radius) {
 
     this.setTorpedoReleaseTime = function (releaseTime) {
         torpedoReleaseTime = releaseTime;
-    }
+    };
 
     this.getTorpedoReleaseTime = function(){
         return torpedoReleaseTime;
-    }
+    };
 
     this.setTorpedoReloadTime = function(time){
         torpedoReloadTime = time;
-    }
+    };
 
     this.getTorpedoReloadTime = function(){
         return torpedoReloadTime;
-    }
+    };
 
     this.setTorpedoSpeed = function(x){
         torpedoSpeed = x;
-    }
+    };
 
     this.getTorpedoSpeed = function(){
         return torpedoSpeed;
-    }
+    };
 
     this.setSpeed = function (v) {
         speed = v;
@@ -251,14 +251,14 @@ function SubMap(map_x_size, map_y_size, radar_radius) {
 
             this.refreshTorpedoes(torpedo_list);
         }
-    }
+    };
 
     this.refreshTorpedoes = function(torpedo_list){
         this.destroyTorpedoes();
-        for (i = 0; i < torpedo_list.length; i++){
+        for (var i = 0; i < torpedo_list.length; i++){
             this.addTorpedo(torpedo_list[i]);
         }
-    }
+    };
 
     this.addTorpedo = function(missle){
         var torpedo = new PIXI.Graphics();
@@ -280,7 +280,7 @@ function SubMap(map_x_size, map_y_size, radar_radius) {
         }
         stage.addChild(torpedo);
         torpedoes.push(torpedo);
-    }
+    };
 
     this.destroy = function(destroyerName){
         destroyed = true;
@@ -288,14 +288,14 @@ function SubMap(map_x_size, map_y_size, radar_radius) {
         text.position.x = 200;
         text.position.y = map_y_size/2;
         stage.addChild(text);
-    }
+    };
 
     this.destroyTorpedoes = function(){//necessary to remove objects from map
-        for (i = torpedoes.length; i--;){
+        for (var i = torpedoes.length; i--;){
             stage.removeChild(torpedoes[i]);
             torpedoes.splice(i, 1);
         }
-        for (j = sprites.length; j--;){
+        for (var j = sprites.length; j--;){
             stage.removeChild(sprites[j]);
             sprites.splice(j, 1);
         }
