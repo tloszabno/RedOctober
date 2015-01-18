@@ -17,7 +17,7 @@ public class PlayerRepository {
 		return players;
 	}
 	
-	public void disconnectPlayer(Player player){
+	public void disconnectPlayer(MovingObject player){
 		players.remove(player);
 	}
 

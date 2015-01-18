@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GameObject {
 
-	private double x, y;
+	protected double x, y;
 
 	public GameObject(double x, double y) {
 		this.x = x;
