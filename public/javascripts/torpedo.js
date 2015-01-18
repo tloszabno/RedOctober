@@ -1,6 +1,9 @@
     function Torpedo(position_x, position_y, exploded){
         var x = position_x;
         var y = position_y;
+        var dx;
+        var dy;
+
         var exploded = exploded;
 
         this.setExploded = function(isExploded){
@@ -26,4 +29,10 @@
         this.getY = function (){
             return y;
         };
+
+        this.computeDeriverates = function(rotation){
+            dx = -Math.sin(rotation);
+            dy = Math.cos(rotation);
+        }
+
     }

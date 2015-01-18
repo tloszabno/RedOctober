@@ -4,6 +4,7 @@ function SubMap(map_x_size, map_y_size, radar_radius) {
     var ships_array = [];
     var torpedoes = [];
     var sprites = [];
+    var launched_torpedo;
 
     var drawShip = function (name, x,y,rotation, color, isMy){
         var ctx = new PIXI.Graphics();
@@ -41,7 +42,7 @@ function SubMap(map_x_size, map_y_size, radar_radius) {
         radar.drawCircle(0, 0, radar_radius);
 
         return radar;
-    }
+    };
 
 
 // main view of PIXI Canvas
@@ -86,8 +87,8 @@ function SubMap(map_x_size, map_y_size, radar_radius) {
             mainShip.position.x = (mainShip.position.x % renderer.width);
             mainShip.position.y = (mainShip.position.y % renderer.height);
 
-            radar.position.x = mainShip.position.x
-            radar.position.y = mainShip.position.y
+            radar.position.x = mainShip.position.x;
+            radar.position.y = mainShip.position.y;
 
             // handle situations when ships whant to move outside borders
             if (mainShip.position.x < 0) {
@@ -110,15 +111,10 @@ function SubMap(map_x_size, map_y_size, radar_radius) {
 
         }
 
-        for (i = torpedoes.length; i--;){
-            if (torpedoes[i].getExpoded == true){
-
-            }
-        }
 
         if (destroyed) {
-            var texture = PIXI.Texture.fromImage("assets/images/explosion.png")
-            var sprite = new PIXI.Sprite(texture)
+            var texture = PIXI.Texture.fromImage("assets/images/explosion.png");
+            var sprite = new PIXI.Sprite(texture);
 
             sprite.position.x = mainShip.position.x - 30;
             sprite.position.y = mainShip.position.y - 33;
@@ -135,6 +131,18 @@ function SubMap(map_x_size, map_y_size, radar_radius) {
     this.getMap = function (){
         return map;
     };
+
+    /**
+     *
+      * @returns last launched torpedo, clears the last launched torpedo in map
+     *  if no launched undefined is returned
+     */
+    this.popLaunchedTorpedo = function(){
+        var t = launched_torpedo;
+        launched_torpedo = undefined;
+        return t;
+    };
+
 
     this.setTorpedoReleaseTime = function (releaseTime) {
         torpedoReleaseTime = releaseTime;
@@ -239,16 +247,15 @@ function SubMap(map_x_size, map_y_size, radar_radius) {
         });
     };
 
-    this.launch = function(){//TODO now only a test method, to add torpedos use refreshTorpedos directly
+    this.launchTorpedo = function(){
         if (((Date.now() - torpedoReleaseTime)/1000) > torpedoReloadTime ){
             torpedoReleaseTime = Date.now();
 
             var torpedo = new Torpedo(mainShip.position.x, mainShip.position.y, false);
-            var torpedo2 = new Torpedo(mainShip.position.x + 30, mainShip.position.y + 30 , true);
+            torpedo.computeDeriverates(this.getRotation());
             var torpedo_list = [];
             torpedo_list.push(torpedo);
-            torpedo_list.push(torpedo2);
-
+            launched_torpedo = torpedo;
             this.refreshTorpedoes(torpedo_list);
         }
     };

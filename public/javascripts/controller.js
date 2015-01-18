@@ -44,23 +44,25 @@ function Controller() {
         var current_x = map.getXPosition();
         var current_y = map.getYPosition();
 
-        var dx = current_x - position_cache[my_ship_name].previous_x;
-        var dy = current_y - position_cache[my_ship_name].previous_y;
+        var dx = -Math.sin(map.getRotation());
+        var dy = Math.cos(map.getRotation());
 
         refresh_position_cache(my_ship_name, current_x, current_y);
 
 
         var user_nick = $("#userName").val();
 
-        var message = {
-            type: "navigation",
-            user_nick: user_nick,
-            current_x: current_x,
-            current_y: current_y,
-            x_prim: dx,
-            y_prim: dy
-        };
+        var torpedo = get_lauched_torpedo_info();
 
+        var message = {
+                type: "navigation",
+                user_nick: user_nick,
+                current_x: current_x,
+                current_y: current_y,
+                x_prim: dx,
+                y_prim: dy,
+                launched_torpedo: torpedo
+            };
         return message;
     };
 
@@ -75,6 +77,19 @@ function Controller() {
 
         map = new SubMap(self.map_x, self.map_y, self.radar_radius);
         put_map_to_html();
+    }
+
+    function get_lauched_torpedo_info(){
+        var t = map.popLaunchedTorpedo();
+        if(t){
+            console.log("get_lauched_torpedo_info; " + t);
+            return {
+                current_x: t.x,
+                current_y: t.y,
+                x_prim: t.dx,
+                y_prim: t.dy
+            }
+        }
     }
 
     function add_or_move_ships(ships, ship_type) {
@@ -208,7 +223,7 @@ function Controller() {
                 break;
 
             case CONTROL_KEYS.ctrl:
-                map.launch();
+                map.launchTorpedo();
                 break;
 
             case ALPHANUMERIC_KEYS.d:
