@@ -13,7 +13,7 @@ function error(msg){
 
 
 function Controller() {
-    // fileds
+    // fields
     var map;
     var my_ship_name;
     var position_cache = {};
@@ -99,11 +99,23 @@ function Controller() {
         }
         set_ships_positions(commandObject);
 
+        set_torpedos_position(commandObject);
+
         if( msg !== undefined ) {
             sendToServerFunction(msg);
         }
 
         set_position_request_invocations++;
+    }
+
+    function set_torpedos_position(commandObject){
+        var torpedoes_str = commandObject.torpedoes;
+        var torpedoes = [];
+        for(var i = 0; i < torpedoes_str.length; i++){
+            var t = torpedoes_str[i];
+            torpedoes.push(new Torpedo(t.x, t.y, t.exploded));
+        }
+        map.refreshTorpedoes(torpedoes);
     }
 
     function set_ships_positions(commandObject){
@@ -170,10 +182,6 @@ function Controller() {
                 }
                 break;
 
-            case 17:
-                map.launch();
-                break
-
             default :
                 return;
         }
@@ -199,11 +207,11 @@ function Controller() {
             case ARROW_KEYS.down:
                 break;
 
-            case 17:
+            case CONTROL_KEYS.ctrl:
                 map.launch();
-                break
+                break;
 
-            case 68:
+            case ALPHANUMERIC_KEYS.d:
                 map.destroy("Autodestruction");
                 break;
 
