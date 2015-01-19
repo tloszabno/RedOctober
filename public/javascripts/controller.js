@@ -24,6 +24,8 @@ function Controller() {
      *  INVOKE THIS FUNCTION ON MESSAGE FROM SERVER
      **/
     this.dispatch =  function(commandObject, sendToServerFunction) {
+
+        ///console.log(JSON.stringify(commandObject));
         var type = commandObject.type;
         switch (type) {
             case "position":
@@ -63,6 +65,9 @@ function Controller() {
                 y_prim: dy,
                 launched_torpedo: torpedo
             };
+
+        //console.log(JSON.stringify(message));
+
         return message;
     };
 
@@ -81,14 +86,16 @@ function Controller() {
 
     function get_lauched_torpedo_info(){
         var t = map.popLaunchedTorpedo();
-        if(t){
-            console.log("get_lauched_torpedo_info; " + t);
-            return {
-                current_x: t.x,
-                current_y: t.y,
-                x_prim: t.dx,
-                y_prim: t.dy
-            }
+        if(t !== undefined){
+
+            var torpedo = {
+                'current_x': t.getY(),
+                'current_y': t.getX(),
+                'x_prim': t.getDx(),
+                'y_prim': t.getDy()
+            };
+
+            return torpedo;
         }
     }
 
@@ -148,6 +155,9 @@ function Controller() {
             map.putOrMoveMainShip(my_ship.x, my_ship.y, angel, SHIP_COLOR_OF.mine);
 
             refresh_position_cache(my_ship_name, my_ship.x, my_ship.y);
+        }
+        if(my_ship.is_shot == true){
+            map.destroy(my_ship.shot_by);
         }
 
         var enemy_ships = commandObject.enemy;

@@ -30,6 +30,14 @@
             return y;
         };
 
+        this.getDx  = function (){
+            return dx;
+        };
+
+        this.getDy  = function (){
+            return dy;
+        };
+
         this.computeDeriverates = function(rotation){
             dx = -Math.sin(rotation);
             dy = Math.cos(rotation);

@@ -49,4 +49,5 @@ public class Torpedo extends MovingObject {
 	public void setIsExploded(boolean expl){
 		//do nothing
 	}
+
 }
