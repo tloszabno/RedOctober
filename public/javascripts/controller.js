@@ -115,6 +115,7 @@ function Controller() {
 
     var set_position_request_invocations = 0;
     function handle_set_positions_request(commandObject, sendToServerFunction) {
+    	console.log(commandObject);
 
         if(set_position_request_invocations > 0 && sendToServerFunction !== undefined){
             var msg = self.get_navigation();
