@@ -62,7 +62,7 @@ function SubMap(map_x_size, map_y_size, radar_radius) {
     var lastTime = Date.now();
     var nowTime = Date.now();
     var torpedoSpeed = 70;
-    var torpedoReloadTime = 1;
+    var torpedoReloadTime = 3;
     var torpedoReleaseTime = Date.now();
 
     var speed = 0;
