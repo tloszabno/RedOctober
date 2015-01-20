@@ -1,5 +1,5 @@
 
-var isDebug = true;
+var isDebug = false;
 
 function log(msg){
     if(isDebug){
