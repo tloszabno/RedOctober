@@ -16,6 +16,7 @@ public class TorpedoRepository {
     }
 
     public void addTorpedo(Torpedo torpedo) {
+        System.out.println("Added torpedo x=" + torpedo.getX() + " y=" + torpedo.getY() + " dx=" + torpedo.getDeltaX() + " dy=" + torpedo.getDeltaY());
         torpedoes.add(torpedo);
     }
 

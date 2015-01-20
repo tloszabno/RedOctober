@@ -269,22 +269,19 @@ function SubMap(map_x_size, map_y_size, radar_radius) {
 
     this.addTorpedo = function(missle){
         var torpedo = new PIXI.Graphics();
-        if(missle.getExploded() == false){
-            torpedo.lineStyle(3,"black" );
-            torpedo.drawCircle(0, 0, 1);
-            torpedo.position.x = missle.getX();
-            torpedo.position.y = missle.getY();
-        }
-        if (missle.getExploded() == true){
-            var texture = PIXI.Texture.fromImage("assets/images/small_explosion.png");
-            var sprite = new PIXI.Sprite(texture);
 
-            //setting sprite center positions
-            sprite.position.x = missle.getX() - 6;
-            sprite.position.y = missle.getY() - 7;
-            sprites.push(sprite);
-            torpedo.addChild(sprite);
-        }
+        var image = missle.getExploded() ? "assets/images/small_explosion.png" : "assets/images/torpedo.png"
+
+
+        var texture = PIXI.Texture.fromImage(image);
+        var sprite = new PIXI.Sprite(texture);
+
+        //setting sprite center positions
+        sprite.position.x = missle.getX() - 6;
+        sprite.position.y = missle.getY() - 7;
+        sprites.push(sprite);
+        torpedo.addChild(sprite);
+
         stage.addChild(torpedo);
         torpedoes.push(torpedo);
     };

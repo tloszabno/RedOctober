@@ -39,8 +39,8 @@
         };
 
         this.computeDeriverates = function(rotation){
-            dx = -Math.sin(rotation);
-            dy = Math.cos(rotation);
+            dx = -Math.sin(rotation)*TORPEDO_CONFIG.torpedo_ratio;
+            dy = Math.cos(rotation)*TORPEDO_CONFIG.torpedo_ratio;
         }
 
     }

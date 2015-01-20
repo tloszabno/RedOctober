@@ -46,8 +46,8 @@ function Controller() {
         var current_x = map.getXPosition();
         var current_y = map.getYPosition();
 
-        var dx = -Math.sin(map.getRotation());
-        var dy = Math.cos(map.getRotation());
+        var dx = -Math.sin(map.getRotation())*5;
+        var dy = Math.cos(map.getRotation())*5;
 
         refresh_position_cache(my_ship_name, current_x, current_y);
 
@@ -89,8 +89,8 @@ function Controller() {
         if(t !== undefined){
 
             var torpedo = {
-                'current_x': t.getY(),
-                'current_y': t.getX(),
+                'current_x': t.getX(),
+                'current_y': t.getY(),
                 'x_prim': t.getDx(),
                 'y_prim': t.getDy()
             };
@@ -115,7 +115,7 @@ function Controller() {
 
     var set_position_request_invocations = 0;
     function handle_set_positions_request(commandObject, sendToServerFunction) {
-    	console.log(commandObject);
+    	//console.log(commandObject);
 
         if(set_position_request_invocations > 0 && sendToServerFunction !== undefined){
             var msg = self.get_navigation();
