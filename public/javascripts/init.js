@@ -6,7 +6,7 @@ function url(s) {
 
 
 var wsUri = url("join");
-log("URL="  + wsUri);
+//log("URL="  + wsUri);
 
 var output;
 var controller;

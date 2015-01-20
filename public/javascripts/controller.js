@@ -25,7 +25,7 @@ function Controller() {
      **/
     this.dispatch =  function(commandObject, sendToServerFunction) {
 
-        ///console.log(JSON.stringify(commandObject));
+        //console.log(JSON.stringify(commandObject));
         var type = commandObject.type;
         switch (type) {
             case "position":
@@ -128,6 +128,8 @@ function Controller() {
             sendToServerFunction(msg);
         }
 
+        updateNotifications(commandObject);
+
         set_position_request_invocations++;
     }
 
@@ -169,9 +171,49 @@ function Controller() {
     }
 
     function put_map_to_html(){
-        document.body.appendChild ( map.getMap() ) ;
+        document.getElementById('mapHolderId').appendChild ( map.getMap() ) ;
         document.onkeydown = checkDown;
         document.onkeyup = checkUp;
+    }
+
+    var fragCounter=0
+    function updateNotifications(commandObject){
+
+        if( commandObject.shots == null || commandObject.shots.length < 1 ){
+            return;
+        }
+
+        commandObject.shots.forEach(function(shot){
+           var killer=shot.shot_by;
+           var killed=shot.shot;
+
+           appendNotificationToHtml(killer, killed);
+
+           var user_nick = $("#userName").val();
+           if (user_nick == killer){
+                fragCounter++;
+                updateFragCounterInHtml();
+           }
+           if (user_nick == killed){
+                map.destroy("You were killed by " + killer);
+           }
+        });
+
+    }
+
+    function appendNotificationToHtml(killer, killed){
+        var node = document.createElement("LI");
+        var textnode = document.createTextNode(killer + " -> " + killed);
+        node.appendChild(textnode);
+        var list = document.getElementById('notificationsId');
+        list.insertBefore(node, list.childNodes[0]);
+        if (list.childNodes.length > 15){
+            list.removeChild(list.childNodes[15]);
+        }
+    }
+
+    function updateFragCounterInHtml(){
+        document.getElementById('fragCounterId').innerHTML = "Killed: " + fragCounter;
     }
 
     function checkDown(e) {
