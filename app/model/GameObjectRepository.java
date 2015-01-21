@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -62,6 +63,22 @@ public class GameObjectRepository {
 		if( object instanceof Player )
 			players.remove((MovingObject) object);
 	}
+	
+	public void update() {
+        for(Torpedo torpedo: torpedos)
+            torpedo.move();
+
+        for(Player player: players)
+        	player.move();
+    }
+
+    public void removeExplodedTorpedoes() {
+        for(Iterator<Torpedo> iterator = torpedos.iterator(); iterator.hasNext();) {
+            Torpedo torpedo = iterator.next();
+            if(!torpedo.isMoving())
+                iterator.remove();
+        }
+    }
 }
 
 
