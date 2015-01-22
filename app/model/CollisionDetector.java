@@ -51,6 +51,7 @@ public class CollisionDetector {
 
 				if( playersCollides(player1, player2) ){
 					notifyShot(player1, player2.getNick());
+					notifyShot(player2, player1.getNick());
 					playerIterator1.remove();
 					playerIterator2.remove();
 				}
