@@ -13,7 +13,7 @@ public class Board {
 
 	private double width = 1000.0;
 	private double height = 500.0;
-	private double radar_radius = 100.0;
+	private double radar_radius = 120.0;
 
 	private Map<String, Player> players;
 
