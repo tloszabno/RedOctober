@@ -6,35 +6,31 @@
 
 </div>
 
-<div class="container">
-    <div class="row">
+<div class="map" id="mapHolderId">
 
 
-        <div class="col-md-10" id="mapHolderId">
-
-
-        <script src="@routes.Assets.at("javascripts/jquery.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/jquery.js")" type="text/javascript"></script>
             <script src="@routes.Assets.at("javascripts/pixi.dev.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/ships_config.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/ships_config.js")" type="text/javascript"></script>
             <script src="@routes.Assets.at("javascripts/torpedo.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/map.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/map.js")" type="text/javascript"></script>
             <script src="@routes.Assets.at("javascripts/keys_codes.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/controller.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/controller.js")" type="text/javascript"></script>
             <!--script src="@routes.Assets.at("javascripts/tests/control_test.js")" type="text/javascript"></script-->
             <script src="@routes.Assets.at("javascripts/init.js")" type="text/javascript"></script>
 
-        </div>
+</div>
 
-        <div class="col-md-2" >
-            <h5 id="fragCounterId">Killed: 0</h5>
-            <h5>Notifications:</h5>
-            <ul id="notificationsId">
-            </ul>
-        </div>
-    </div>
+<div  class="stats">
+    <h5 id="fragCounterId">Killed: 0</h5>
+    <h5>Notifications:</h5>
+    <ul id="notificationsId">
+    </ul>
+</div>
 </div>
 
 <input type="hidden" id="userName" value="@name">
 <input type="hidden" id="teamName" value="@team">
 
 }
+        
