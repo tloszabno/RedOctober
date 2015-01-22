@@ -54,6 +54,8 @@ public class CollisionDetector {
                     Player player2 = playerIterator2.next();
 
                     if (playersCollides(player1, player2) && !player2.getIsShot()) {
+                        player1.shot();
+                        player2.shot();
                         notifyShot(player1, player2.getNick());
                         notifyShot(player2, player1.getNick());
                         //playerIterator1.remove();
