@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Torpedo extends MovingObject {
 
-	private final double range = 50.0d;
+	private final double range = 250.0d;
 	private double distance = 0.0d;
 	@JsonIgnore
 	private boolean hit = false;
@@ -49,4 +49,5 @@ public class Torpedo extends MovingObject {
 	public void setIsExploded(boolean expl){
 		//do nothing
 	}
+
 }

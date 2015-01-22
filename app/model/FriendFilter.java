@@ -56,7 +56,7 @@ public class FriendFilter {
 		LinkedList<Torpedo> accepted = new LinkedList<Torpedo>();
 		for (Torpedo t : torpedoes) {
 			Player striker = findPlayerByName(t.getUserNick());
-			boolean isFriend = classifyPlayer(striker, Filter.FRIENDS);
+			boolean isFriend = classifyTorpedo(striker, Filter.FRIENDS);
 			if (isFriend){
 				accepted.add(t);
 			} else if (isNear(t, radar_range)){
@@ -90,11 +90,25 @@ public class FriendFilter {
 		return result;
 	}
 
+	private boolean classifyTorpedo(Player p, Filter filter) {
+		return classify(p,filter, true);
+	}
+	
 	private boolean classifyPlayer(Player p, Filter filter) {
+		return classify(p,filter, false);
+	}
+	
+	private boolean classify(Player p, Filter filter, boolean isTorpedo) {
 		boolean isInMyTeam = p.getTeam().equalsIgnoreCase(my.getTeam());
 		boolean isNotMy = !p.equals(my);
 		boolean wantToGetFriends = filter==Filter.FRIENDS;
-		boolean classify = (wantToGetFriends == isInMyTeam)&&isNotMy;
+		boolean classify;
+		if (isTorpedo){
+			classify = (wantToGetFriends == isInMyTeam);	
+		} else {
+			classify = (wantToGetFriends == isInMyTeam)&&isNotMy;
+		}
+		
 		return classify;
 	}
 	

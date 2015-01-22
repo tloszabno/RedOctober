@@ -1,5 +1,5 @@
 
-var isDebug = true;
+var isDebug = false;
 
 function log(msg){
     if(isDebug){
@@ -13,7 +13,7 @@ function error(msg){
 
 
 function Controller() {
-    // fileds
+    // fields
     var map;
     var my_ship_name;
     var position_cache = {};
@@ -24,6 +24,8 @@ function Controller() {
      *  INVOKE THIS FUNCTION ON MESSAGE FROM SERVER
      **/
     this.dispatch =  function(commandObject, sendToServerFunction) {
+
+        //console.log(JSON.stringify(commandObject));
         var type = commandObject.type;
         switch (type) {
             case "position":
@@ -44,22 +46,27 @@ function Controller() {
         var current_x = map.getXPosition();
         var current_y = map.getYPosition();
 
-        var dx = current_x - position_cache[my_ship_name].previous_x;
-        var dy = current_y - position_cache[my_ship_name].previous_y;
+        var dx = -Math.sin(map.getRotation())*5;
+        var dy = Math.cos(map.getRotation())*5;
 
         refresh_position_cache(my_ship_name, current_x, current_y);
 
 
         var user_nick = $("#userName").val();
 
+        var torpedo = get_lauched_torpedo_info();
+
         var message = {
-            type: "navigation",
-            user_nick: user_nick,
-            current_x: current_x,
-            current_y: current_y,
-            x_prim: dx,
-            y_prim: dy
-        };
+                type: "navigation",
+                user_nick: user_nick,
+                current_x: current_x,
+                current_y: current_y,
+                x_prim: dx,
+                y_prim: dy,
+                launched_torpedo: torpedo
+            };
+
+        //console.log(JSON.stringify(message));
 
         return message;
     };
@@ -71,9 +78,25 @@ function Controller() {
     function handle_init_map(commandObject) {
         self.map_x = commandObject.x_size;
         self.map_y = commandObject.y_size;
+        self.radar_radius = commandObject.radar_radius;
 
-        map = new SubMap(self.map_x, self.map_y);
+        map = new SubMap(self.map_x, self.map_y, self.radar_radius);
         put_map_to_html();
+    }
+
+    function get_lauched_torpedo_info(){
+        var t = map.popLaunchedTorpedo();
+        if(t !== undefined){
+
+            var torpedo = {
+                'current_x': t.getX(),
+                'current_y': t.getY(),
+                'x_prim': t.getDx(),
+                'y_prim': t.getDy()
+            };
+
+            return torpedo;
+        }
     }
 
     function add_or_move_ships(ships, ship_type) {
@@ -92,19 +115,33 @@ function Controller() {
 
     var set_position_request_invocations = 0;
     function handle_set_positions_request(commandObject, sendToServerFunction) {
-    	
+    	//TODO remove below line
     	console.log(commandObject);
-    	
+
         if(set_position_request_invocations > 0 && sendToServerFunction !== undefined){
             var msg = self.get_navigation();
         }
         set_ships_positions(commandObject);
 
+        set_torpedos_position(commandObject);
+
         if( msg !== undefined ) {
             sendToServerFunction(msg);
         }
 
+        updateNotifications(commandObject);
+
         set_position_request_invocations++;
+    }
+
+    function set_torpedos_position(commandObject){
+        var torpedoes_str = commandObject.torpedoes;
+        var torpedoes = [];
+        for(var i = 0; i < torpedoes_str.length; i++){
+            var t = torpedoes_str[i];
+            torpedoes.push(new Torpedo(t.x, t.y, t.exploded));
+        }
+        map.refreshTorpedoes(torpedoes);
     }
 
     function set_ships_positions(commandObject){
@@ -123,6 +160,9 @@ function Controller() {
 
             refresh_position_cache(my_ship_name, my_ship.x, my_ship.y);
         }
+        if(my_ship.is_shot == true){
+            map.destroy(my_ship.shot_by);
+        }
 
         var enemy_ships = commandObject.enemy;
         add_or_move_ships(enemy_ships, SHIP_TYPE.Enemy);
@@ -132,9 +172,49 @@ function Controller() {
     }
 
     function put_map_to_html(){
-        document.body.appendChild ( map.getMap() ) ;
+        document.getElementById('mapHolderId').appendChild ( map.getMap() ) ;
         document.onkeydown = checkDown;
         document.onkeyup = checkUp;
+    }
+
+    var fragCounter=0
+    function updateNotifications(commandObject){
+
+        if( commandObject.shots == null || commandObject.shots.length < 1 ){
+            return;
+        }
+
+        commandObject.shots.forEach(function(shot){
+           var killer=shot.shot_by;
+           var killed=shot.shot;
+
+           appendNotificationToHtml(killer, killed);
+
+           var user_nick = $("#userName").val();
+           if (user_nick == killer){
+                fragCounter++;
+                updateFragCounterInHtml();
+           }
+           if (user_nick == killed){
+                map.destroy("You were killed by " + killer);
+           }
+        });
+
+    }
+
+    function appendNotificationToHtml(killer, killed){
+        var node = document.createElement("LI");
+        var textnode = document.createTextNode(killer + " -> " + killed);
+        node.appendChild(textnode);
+        var list = document.getElementById('notificationsId');
+        list.insertBefore(node, list.childNodes[0]);
+        if (list.childNodes.length > 15){
+            list.removeChild(list.childNodes[15]);
+        }
+    }
+
+    function updateFragCounterInHtml(){
+        document.getElementById('fragCounterId').innerHTML = "Killed: " + fragCounter;
     }
 
     function checkDown(e) {
@@ -143,6 +223,7 @@ function Controller() {
 
 
         var default_speed  = MY_SHIP_CONFIG.default_speed;
+
         switch (key) {
             case ARROW_KEYS.left:
                 map.setRotationSpeed(-0.7);
@@ -195,6 +276,13 @@ function Controller() {
             case ARROW_KEYS.down:
                 break;
 
+            case CONTROL_KEYS.ctrl:
+                map.launchTorpedo();
+                break;
+
+            case ALPHANUMERIC_KEYS.d:
+                map.destroy("Autodestruction");
+                break;
 
             default :
                 return;

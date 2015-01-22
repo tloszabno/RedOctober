@@ -8,5 +8,10 @@ var ARROW_KEYS = {
 
 var ALPHANUMERIC_KEYS = {
     's': 83,
-    'm': 77
+    'm': 77,
+    'd': 68
+};
+
+var CONTROL_KEYS = {
+    'ctrl' : 17
 };

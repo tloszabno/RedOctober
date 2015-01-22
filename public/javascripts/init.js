@@ -6,7 +6,7 @@ function url(s) {
 
 
 var wsUri = url("join");
-log("URL="  + wsUri);
+//log("URL="  + wsUri);
 
 var output;
 var controller;
@@ -50,7 +50,7 @@ function onClose(evt) {
 }
 
 function onMessage(evt) {
-	console.log("MSG from server=" + evt.data);
+	//console.log("MSG from server=" + evt.data);
 
 
 	controller.dispatch(JSON.parse(evt.data), doSend)
@@ -65,7 +65,7 @@ function onError(evt) {
 
 function doSend(message) {
 	var stringified = JSON.stringify(message);
-	writeToScreen("SENT: " + stringified);
+	//writeToScreen("SENT: " + stringified);
 
 	websocket.send(stringified);
 }
