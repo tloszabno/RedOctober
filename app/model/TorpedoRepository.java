@@ -24,6 +24,14 @@ public class TorpedoRepository {
             torpedo.move();
     }
 
+    public void removeUserTorpedoes(String userNick){
+        for(Iterator<Torpedo> iterator = torpedoes.iterator(); iterator.hasNext();) {
+            Torpedo torpedo = iterator.next();
+            if(userNick.equalsIgnoreCase(torpedo.getUserNick()))
+                iterator.remove();
+        }
+    }
+
     public void removeExplodedTorpedoes() {
         for(Iterator<Torpedo> iterator = torpedoes.iterator(); iterator.hasNext();) {
             Torpedo torpedo = iterator.next();
