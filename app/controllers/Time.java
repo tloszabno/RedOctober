@@ -37,9 +37,9 @@ private CollisionDetector collisionDetector;
             processNavigation(item);
 		}
 		controller.getTorpedoRepository().update(); // przesuwanie torped po mapie
+		controller.getTorpedoRepository().removeExplodedTorpedoes();
 		collisionDetector.detectCollisions();
 		controller.broadcast();
-		controller.getTorpedoRepository().removeExplodedTorpedoes();
 		/*
 			Jeśli kogoś zastanawia czemu update -> broadcast -> removeExplodedTorpedoes
 			Update - przesuwamy po mapie torpedy, może się zdarzyć, że któraś wybuchnie, ale nie możemy jej usunąć z pamięci, bo trzeba wysłać tę informację wszystkim

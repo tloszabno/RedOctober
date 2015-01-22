@@ -56,7 +56,7 @@ public class FriendFilter {
 		LinkedList<Torpedo> accepted = new LinkedList<Torpedo>();
 		for (Torpedo t : torpedoes) {
 			Player striker = findPlayerByName(t.getUserNick());
-			boolean isFriend = classifyTorpedo(striker, Filter.FRIENDS);
+			boolean isFriend = striker != null ? classifyTorpedo(striker, Filter.FRIENDS) : false;
 			if (isFriend){
 				accepted.add(t);
 			} else if (isNear(t, radar_range)){
@@ -77,6 +77,7 @@ public class FriendFilter {
 				return p;
 			}
 		}
+		System.out.println("Cannot find user=" + userNick);
 		return null;
 	}
 

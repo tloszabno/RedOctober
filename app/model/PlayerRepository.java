@@ -8,6 +8,7 @@ public class PlayerRepository {
 	private List<Player> players = new LinkedList<Player>(); 
 
 	public List<Player> connectNewPlayer( Player player){
+		System.out.println("PlayerRepository= " + player.getNick() );
 		players.add(player);
 		
 		return players;

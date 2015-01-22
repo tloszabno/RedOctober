@@ -44,7 +44,9 @@ public class TeamSocket extends WebSocket<String> {
 		in.onClose(new Callback0() {
 			@Override
 			public void invoke() throws Throwable {
+				System.out.println("User disconnected");
 				game.disconnect(TeamSocket.this);
+				TeamSocket.this.out.close();
 				TeamSocket.this.out = null;
 			}
 		});
