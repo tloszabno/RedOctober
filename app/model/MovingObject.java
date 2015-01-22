@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public abstract class MovingObject extends GameObject{
 
-	protected double deltaX, deltaY;
+	protected valatile double deltaX, deltaY; // God forgive me, but no time for normal synch
 
 	
 	public MovingObject(double x, double y, double deltaX, double deltaY, double sizeRadius) {

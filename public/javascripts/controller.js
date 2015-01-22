@@ -116,7 +116,6 @@ function Controller() {
     var set_position_request_invocations = 0;
     function handle_set_positions_request(commandObject, sendToServerFunction) {
     	//TODO remove below line
-    	console.log(commandObject);
 
         if(set_position_request_invocations > 0 && sendToServerFunction !== undefined && commandObject.my.is_shot != true){
             var msg = self.get_navigation();
@@ -160,9 +159,7 @@ function Controller() {
 
             refresh_position_cache(my_ship_name, my_ship.x, my_ship.y);
         }
-        if(my_ship.is_shot == true){
-            map.destroy(my_ship.shot_by);
-        }
+
 
         var enemy_ships = commandObject.enemy;
         add_or_move_ships(enemy_ships, SHIP_TYPE.Enemy);
@@ -180,12 +177,12 @@ function Controller() {
     var fragCounter=0
     function updateNotifications(commandObject){
 
-        if( commandObject.shots == null || commandObject.shots.length < 1 ){
+        if( commandObject.shots == undefined || commandObject.shots.length < 1 ){
             return;
         }
 
         commandObject.shots.forEach(function(shot){
-           var killer=shot.shot_by;
+           var killer=shot.shotBy;
            var killed=shot.shot;
 
            appendNotificationToHtml(killer, killed);
@@ -195,8 +192,8 @@ function Controller() {
                 fragCounter++;
                 updateFragCounterInHtml();
            }
-           if (user_nick == killed){
-                map.destroy("You were killed by " + killer);
+           if (user_nick == killed && killer !== undefined && killer !== "undefined"){
+                map.destroy(killer);
            }
         });
 

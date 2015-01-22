@@ -286,9 +286,10 @@ function SubMap(map_x_size, map_y_size, radar_radius) {
         torpedoes.push(torpedo);
     };
 
-    this.destroy = function(destroyerName){
+    this.destroy = function(killer){
+        var msg = "Destroyed by player: " + killer
         destroyed = true;
-        var text = new PIXI.Text("You were destroyed by player: " + destroyerName, {font:"30px Arial", fill:"red"});
+        var text = new PIXI.Text(msg, {font:"30px Arial", fill:"red"});
         text.position.x = 200;
         text.position.y = map_y_size/2;
         stage.addChild(text);

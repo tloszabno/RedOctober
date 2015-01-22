@@ -3,6 +3,7 @@ package controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -34,7 +35,7 @@ public class GameController {
         system=ActorSystem.create("RedOctober");
         concurrentQueue = new ConcurrentLinkedQueue<Navigation>();
 		setPlayers(new PlayerRepository());
-        setSockets(new HashMap<TeamSocket, Player>());
+        setSockets(new ConcurrentHashMap<TeamSocket, Player>());
         setBoard(new Board());
         setQueue(getSystem().actorOf(Props.create(QueueActor.class,concurrentQueue), "queue"));
         timeconfig = new TimeConfiguration();
@@ -45,7 +46,6 @@ public class GameController {
 	public void disconnect(TeamSocket teamSocket) {
 		MovingObject player = sockets.get(teamSocket);
 		sockets.remove(teamSocket);
-		//System.out.println("disconnecting:" + player);
 		players.disconnectPlayer(player);
 		broadcast();
 	}
