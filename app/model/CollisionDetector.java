@@ -33,6 +33,7 @@ public class CollisionDetector {
 				Player player = playerIterator.next();
 				if ( shouldTopedoeShotPlayer(torpedo, player)){
 					player.shot();
+					torpedo.explode();
 					notifyShot(player, torpedo.getUserNick());
 					playerIterator.remove();
 				}
@@ -66,7 +67,7 @@ public class CollisionDetector {
 		}
 
 		double distance = getDistanceBetween(player1, player2);
-		return distance <= (player1.getSizeRadius() + player2.getSizeRadius());
+		return distance <= 40;
 
 	}
 
@@ -84,8 +85,7 @@ public class CollisionDetector {
 		}
 
 		double distance = getDistanceBetween(torpedo, player);
-		return distance <= (player.getSizeRadius() + torpedo.getSizeRadius());
-
+		return distance <= 40;
 	}
 	private double getDistanceBetween(MovingObject obj1, MovingObject obj2){
 		double tmp = Math.pow(obj1.getX() - obj2.getX(), 2) + Math.pow(obj1.getY() - obj2.getY(), 2);
