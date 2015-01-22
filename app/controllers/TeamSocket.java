@@ -46,6 +46,7 @@ public class TeamSocket extends WebSocket<String> {
 			public void invoke() throws Throwable {
 				System.out.println("User disconnected");
 				game.disconnect(TeamSocket.this);
+				game.getTorpedoRepository().removeUserTorpedoes(TeamSocket.this.my.getNick());
 				TeamSocket.this.out.close();
 				TeamSocket.this.out = null;
 			}

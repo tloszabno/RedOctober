@@ -107,7 +107,7 @@ public class FriendFilter {
 		if (isTorpedo){
 			classify = (wantToGetFriends == isInMyTeam);	
 		} else {
-			classify = (wantToGetFriends == isInMyTeam)&&isNotMy;
+			classify = (wantToGetFriends == isInMyTeam)&&isNotMy&&(!p.getIsShot());
 		}
 		
 		return classify;
