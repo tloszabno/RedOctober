@@ -55,7 +55,7 @@ public class FriendFilter {
 	public List<Torpedo> torpedoes(){
 		LinkedList<Torpedo> accepted = new LinkedList<Torpedo>();
 		for (Torpedo t : torpedoes) {
-			if( !t.isMoving() ) {
+			if( t.isMoving() ) {
 				Player striker = findPlayerByName(t.getUserNick());
 				boolean isFriend = striker != null ? classifyTorpedo(striker, Filter.FRIENDS) : false;
 				if (isFriend) {

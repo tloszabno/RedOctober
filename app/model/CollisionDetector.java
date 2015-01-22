@@ -89,6 +89,9 @@ public class CollisionDetector {
         if (player.getNick().equals(torpedo.getUserNick())) {
             return false;
         }
+        if( player.getIsShot() ){
+            return false;
+        }
 
         double distance = getDistanceBetween(torpedo, player);
         return distance <= 40;

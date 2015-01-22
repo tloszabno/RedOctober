@@ -19,7 +19,7 @@ public class Torpedo extends MovingObject {
 
 	@JsonIgnore
 	public boolean isMoving() {
-		return hit || distance < range;
+		return !hit || distance < range;
 	}
 
 	public void explode() {
@@ -46,8 +46,5 @@ public class Torpedo extends MovingObject {
 		return !isMoving();
 	}
 	
-	public void setIsExploded(boolean expl){
-		//do nothing
-	}
 
 }
