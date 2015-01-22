@@ -1,0 +1,11 @@
+canvas {
+    position: absolute;
+    top: 40px;
+    left: 10px;
+}
+
+.stats {
+  position: absolute;
+  left: 1015px;
+  top: 40px;
+}
