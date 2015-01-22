@@ -89,7 +89,7 @@ public class CollisionDetector {
         if (player.getNick().equals(torpedo.getUserNick())) {
             return false;
         }
-        if( player.getIsShot() ){
+        if( player.getIsShot() || torpedo.getIsExploded()) {
             return false;
         }
 
