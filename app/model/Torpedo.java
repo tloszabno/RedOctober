@@ -11,9 +11,9 @@ public class Torpedo extends MovingObject {
 	private boolean hit = false;
 	private String striker_nick;
 
-	public Torpedo() { super(0, 0, 0, 0);}
+	public Torpedo() { super(0, 0, 0, 0, 5.0d);}
 	public Torpedo(String striker_nick, double x, double y, double deltaX, double deltaY) {
-		super(x, y, deltaX, deltaY);
+		super(x, y, deltaX, deltaY, 5.0d);
 		this.striker_nick = striker_nick;
 	}
 
