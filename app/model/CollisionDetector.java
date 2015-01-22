@@ -22,7 +22,7 @@ public class CollisionDetector {
     }
 
     public void detectCollisions() {
-        LinkedList<Torpedo> torpedoes = gameController.getTorpedoRepository().getTorpedoes();//repository.getTorpedos();
+        List<Torpedo> torpedoes = gameController.getTorpedoRepository().getTorpedoes();//repository.getTorpedos();
         List<Player> players = gameController.getPlayerRepository().getConnectedPlayers();//repository.getPlayers();
 
         shotInfos.clear();
@@ -78,12 +78,17 @@ public class CollisionDetector {
     }
 
     private void notifyShot(Player player, String nickBy) {
+
+        Player shotBy = findPlayerByName(nickBy);
+        if( shotBy != null ){
+            gameController.updateScoreByKillerPlayer(player,shotBy);
+        }
+
         ShotInfo shotInfo = new ShotInfo();
         shotInfo.setShot(player.getNick());
         shotInfo.setShotBy(nickBy);
         shotInfos.add(shotInfo);
     }
-
 
     private boolean shouldTopedoeShotPlayer(Torpedo torpedo, Player player) {
         if (player.getNick().equals(torpedo.getUserNick())) {
@@ -106,4 +111,13 @@ public class CollisionDetector {
         return shotInfos;
     }
 
+    private Player findPlayerByName(String userNick) {
+        for (Player p : gameController.getPlayerRepository().getConnectedPlayers()) {
+            if (p.getNick().equalsIgnoreCase(userNick)) {
+                return p;
+            }
+        }
+        System.out.println("Cannot find user=" + userNick);
+        return null;
+    }
 }

@@ -2,8 +2,10 @@ package model;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import controllers.GameController;
 
 public class FriendFilter {
 	
@@ -71,6 +73,15 @@ public class FriendFilter {
 	@JsonProperty("shots")
 	public List<ShotInfo> getShots(){
 		return CollisionDetector.getShotInfos();
+	}
+
+	@JsonProperty("teamsScore")
+	public List<ScoreDTO> getTeamsScore(){
+		List<ScoreDTO> scores = new LinkedList<ScoreDTO>();
+		for(Map.Entry<String, Integer> entry : GameController.getScore().entrySet()){
+			scores.add(new ScoreDTO(entry.getKey(), entry.getValue()));
+		}
+		return scores;
 	}
 
 	private Player findPlayerByName(String userNick) {

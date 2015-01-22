@@ -197,6 +197,21 @@ function Controller() {
            }
         });
 
+        var teamScores = commandObject.teamsScore;
+        updateTeamScores(teamScores);
+
+    }
+
+    function updateTeamScores(teamScores){
+        $("#teamScoresId").html("");
+        if( teamScores !== undefined ){
+            var info = "";
+            for(var i = 0; i < teamScores.length; i++){
+                var s = teamScores[i];
+                info += "<li>" + s.team + ", " + s.score + "</li>";
+            }
+            $("#teamScoresId").html(info);
+        }
     }
 
     function appendNotificationToHtml(killer, killed){

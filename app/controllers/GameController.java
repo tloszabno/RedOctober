@@ -28,6 +28,8 @@ public class GameController {
     private Board board;
     private ConcurrentLinkedQueue<Navigation> concurrentQueue;
     private TimeConfiguration timeconfig;
+	private static Map<String, Integer> score = new ConcurrentHashMap<String, Integer>();
+
 
 	private TorpedoRepository torpedoRepository = new TorpedoRepository();
     
@@ -113,4 +115,21 @@ public class GameController {
 		return timeconfig.getRate()/1000.0;
 	}
 
+	public void updateScoreByKillerPlayer(Player killed, Player killer){
+		// punkty zdobywa drużyna killera
+		if( killed.getNick().equals(killer.getNick()) ){
+			return;
+		}
+		String team = killer.getTeam();
+		Integer teamScore = this.score.get(team);
+		if( teamScore != null ){
+			this.score.put(team, teamScore + 1 );
+		}else{
+			this.score.put(team, 1 );
+		}
+	}
+
+	public static Map<String, Integer> getScore() {
+		return score;
+	}
 }
