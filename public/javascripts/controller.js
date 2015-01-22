@@ -118,7 +118,7 @@ function Controller() {
     	//TODO remove below line
     	console.log(commandObject);
 
-        if(set_position_request_invocations > 0 && sendToServerFunction !== undefined){
+        if(set_position_request_invocations > 0 && sendToServerFunction !== undefined && commandObject.my.is_shot != true){
             var msg = self.get_navigation();
         }
         set_ships_positions(commandObject);

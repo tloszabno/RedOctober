@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,14 +10,9 @@ import controllers.GameController;
 
 public class CollisionDetector {
 	
-	//private GameObjectRepository repository;
 	private static List<ShotInfo> shotInfos;
 	private GameController gameController;
-	
-/*	public CollisionDetector(GameObjectRepository repository) {
-		this.repository = repository;
-	}*/
-	
+
 	public CollisionDetector() {
 	}
 	
@@ -25,87 +22,77 @@ public class CollisionDetector {
 	}
 
 	public void detectCollisions() {
-		LinkedList<Torpedo> torpedos = gameController.getTorpedoRepository().getTorpedoes();//repository.getTorpedos();
+		LinkedList<Torpedo> torpedoes = gameController.getTorpedoRepository().getTorpedoes();//repository.getTorpedos();
 		List<Player> players = gameController.getPlayerRepository().getConnectedPlayers();//repository.getPlayers();
-		List<Rock> rocks = new LinkedList<Rock>();//repository.getRocks();
-		
-		shotInfos.clear();
-		
-		for(int i=0 ; i<torpedos.size() ; i++) {
-			
-			for(int j=0 ; j<rocks.size() ; j++) {
-				double distance = Math.sqrt((torpedos.get(i).getX()-rocks.get(j).getX()) * (torpedos.get(i).getX()-rocks.get(j).getX()) + (torpedos.get(i).getY()-rocks.get(j).getY()) * (torpedos.get(i).getY()-rocks.get(j).getY())  ) ;			
-				if( distance <= rocks.get(j).getSizeRadius() + + torpedos.get(i).getSizeRadius())
-					((Torpedo)torpedos.get(i)).explode();
-			}
-			
-			for(int j=0 ; j<players.size() ; j++) {
-				double distance = Math.sqrt((torpedos.get(i).getX()-players.get(j).getX()) * (torpedos.get(i).getX()-players.get(j).getX()) + (torpedos.get(i).getY()-players.get(j).getY()) * (torpedos.get(i).getY()-players.get(j).getY())  ) ;			
-				if( distance <= players.get(j).getSizeRadius() + torpedos.get(i).getSizeRadius() ) { //poprawic player radius
-					((Player)players.get(j)).shot();
-					ShotInfo shotInfo = new ShotInfo();
-					shotInfo.setShot(((Player)players.get(j)).getNick());
-					getShotInfos().add(shotInfo);
-					//shotInfo.setShot(torpedos.get(i));
-					players.remove(players.get(j));
-					j--;
-				}
-					
-			}	
-		}
-		
-		
-		for(int i=0 ; i<players.size() ; i++) {
-			
-			
-			for(int j=0 ; j<rocks.size() ; j++) {
-				double distance = Math.sqrt((players.get(i).getX()-rocks.get(j).getX()) * (players.get(i).getX()-rocks.get(j).getX()) + (players.get(i).getY()-rocks.get(j).getY()) * (players.get(i).getY()-rocks.get(j).getY())  ) ;			
-				if( distance <= players.get(i).getSizeRadius() + rocks.get(j).getSizeRadius() ) { //jaki jest radius gracza??
-					((Player)players.get(i)).shot();
-					players.remove(players.get(i));
-					break;
-				}
-			}
-			
-			for(int k=i+1 ; k<players.size() ; k++) {
-				double distance = Math.sqrt((players.get(i).getX()-players.get(k).getX()) * (players.get(i).getX()-players.get(k).getX()) + (players.get(i).getY()-players.get(k).getY()) * (players.get(i).getY()-players.get(k).getY())  ) ;			
-				if( distance <= 2 * players.get(k).getSizeRadius()) { //poprawic 5.0
-					((Player)players.get(i)).shot();
-					((Player)players.get(k)).shot();
-					
-					ShotInfo shotInfo = new ShotInfo();
-					shotInfo.setShot(((Player)players.get(i)).getNick());
-					getShotInfos().add(shotInfo);
-					
-					shotInfo = new ShotInfo();
-					shotInfo.setShot(((Player)players.get(k)).getNick());
-					getShotInfos().add(shotInfo);
-					
-					System.out.println("k " + k);
-					players.remove(players.get(k));
-					
-					System.out.println("i " + i);
-					players.remove(players.get(i));
-					
 
-					
-					i--;
-					break;
-					
+		shotInfos.clear();
+
+		for(Torpedo torpedo : torpedoes){
+			Iterator<Player> playerIterator = players.iterator();
+			while(playerIterator.hasNext()){
+				Player player = playerIterator.next();
+				if ( shouldTopedoeShotPlayer(torpedo, player)){
+					player.shot();
+					notifyShot(player, torpedo.getUserNick());
+					playerIterator.remove();
 				}
 			}
-			
 		}
-		
-		
-		
+
+		Iterator<Player> playerIterator1 = players.iterator();
+		while (playerIterator1.hasNext()){
+			Player player1 = playerIterator1.next();
+
+			List<Player> tmpPlayers = new ArrayList<Player>(players);
+			Iterator<Player> playerIterator2 = tmpPlayers.iterator();
+
+			while(playerIterator2.hasNext()){
+				Player player2 = playerIterator2.next();
+
+				if( playersCollides(player1, player2) ){
+					notifyShot(player1, player2.getNick());
+					playerIterator1.remove();
+					playerIterator2.remove();
+				}
+			}
+		}
+	}
+
+
+	private boolean playersCollides(Player player1, Player player2){
+		if( player1.getNick().equals(player2.getNick())){
+			return false;
+		}
+
+		double distance = getDistanceBetween(player1, player2);
+		return distance <= (player1.getSizeRadius() + player2.getSizeRadius());
+
+	}
+
+	private void notifyShot(Player player, String nickBy) {
+		ShotInfo shotInfo = new ShotInfo();
+		shotInfo.setShot(player.getNick());
+		shotInfo.setShotBy(nickBy);
+		shotInfos.add(shotInfo);
+	}
+
+
+	private boolean shouldTopedoeShotPlayer(Torpedo torpedo, Player player){
+		if( player.getNick().equals(torpedo.getUserNick()) ){
+			return false;
+		}
+
+		double distance = getDistanceBetween(torpedo, player);
+		return distance <= (player.getSizeRadius() + torpedo.getSizeRadius());
+
+	}
+	private double getDistanceBetween(MovingObject obj1, MovingObject obj2){
+		double tmp = Math.pow(obj1.getX() - obj2.getX(), 2) + Math.pow(obj1.getY() - obj2.getY(), 2);
+		return Math.sqrt(tmp);
 	}
 
 	public static List<ShotInfo> getShotInfos() {
 		return shotInfos;
 	}
 
-	public static void setShotInfos(List<ShotInfo> shotInfos) {
-		CollisionDetector.shotInfos = shotInfos;
-	}
 }
