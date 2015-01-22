@@ -65,6 +65,11 @@ public class FriendFilter {
 		}
 		return accepted;
 	}
+	
+	@JsonProperty("shots")
+	public List<ShotInfo> getShots(){
+		return CollisionDetector.getShotInfos();
+	}
 
 	private Player findPlayerByName(String userNick) {
 		for (Player p : all_players) {

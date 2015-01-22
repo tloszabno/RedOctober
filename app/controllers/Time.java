@@ -3,6 +3,8 @@ package controllers;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import model.CollisionDetector;
 import model.Navigation;
 import model.Player;
 
@@ -12,11 +14,13 @@ private TimeConfiguration config;
 
 private ConcurrentLinkedQueue<Navigation> queue;
 private GameController controller;
+private CollisionDetector collisionDetector;
 
 	public Time(ConcurrentLinkedQueue<Navigation> queue, GameController controller, 
 			TimeConfiguration config){
 		this.queue = queue;
 		this.controller = controller;
+		collisionDetector = new CollisionDetector(controller);
 		this.config = config;
 	}
 	
@@ -33,6 +37,7 @@ private GameController controller;
             processNavigation(item);
 		}
 		controller.getTorpedoRepository().update(); // przesuwanie torped po mapie
+		collisionDetector.detectCollisions();
 		controller.broadcast();
 		controller.getTorpedoRepository().removeExplodedTorpedoes();
 		/*

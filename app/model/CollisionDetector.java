@@ -1,20 +1,35 @@
 package model;
 
+import java.util.LinkedList;
 import java.util.List;
+
+import controllers.GameController;
 
 
 public class CollisionDetector {
 	
-	private GameObjectRepository repository;
+	//private GameObjectRepository repository;
+	private static List<ShotInfo> shotInfos;
+	private GameController gameController;
 	
-	public CollisionDetector(GameObjectRepository repository) {
+/*	public CollisionDetector(GameObjectRepository repository) {
 		this.repository = repository;
+	}*/
+	
+	public CollisionDetector() {
 	}
 	
+	public CollisionDetector(GameController controller) {
+		this.gameController = controller;
+		shotInfos = new LinkedList<ShotInfo>();
+	}
+
 	public void detectCollisions() {
-		List<MovingObject> torpedos = repository.getTorpedos();
-		List<MovingObject> players = repository.getPlayers();
-		List<Rock> rocks = repository.getRocks();
+		LinkedList<Torpedo> torpedos = gameController.getTorpedoRepository().getTorpedoes();//repository.getTorpedos();
+		List<Player> players = gameController.getPlayerRepository().getConnectedPlayers();//repository.getPlayers();
+		List<Rock> rocks = new LinkedList<Rock>();//repository.getRocks();
+		
+		shotInfos.clear();
 		
 		for(int i=0 ; i<torpedos.size() ; i++) {
 			
@@ -28,6 +43,10 @@ public class CollisionDetector {
 				double distance = Math.sqrt((torpedos.get(i).getX()-players.get(j).getX()) * (torpedos.get(i).getX()-players.get(j).getX()) + (torpedos.get(i).getY()-players.get(j).getY()) * (torpedos.get(i).getY()-players.get(j).getY())  ) ;			
 				if( distance <= players.get(j).getSizeRadius() + torpedos.get(i).getSizeRadius() ) { //poprawic player radius
 					((Player)players.get(j)).shot();
+					ShotInfo shotInfo = new ShotInfo();
+					shotInfo.setShot(((Player)players.get(j)).getNick());
+					getShotInfos().add(shotInfo);
+					//shotInfo.setShot(torpedos.get(i));
 					players.remove(players.get(j));
 					j--;
 				}
@@ -53,8 +72,23 @@ public class CollisionDetector {
 				if( distance <= 2 * players.get(k).getSizeRadius()) { //poprawic 5.0
 					((Player)players.get(i)).shot();
 					((Player)players.get(k)).shot();
-					players.remove(players.get(i));
+					
+					ShotInfo shotInfo = new ShotInfo();
+					shotInfo.setShot(((Player)players.get(i)).getNick());
+					getShotInfos().add(shotInfo);
+					
+					shotInfo = new ShotInfo();
+					shotInfo.setShot(((Player)players.get(k)).getNick());
+					getShotInfos().add(shotInfo);
+					
+					System.out.println("k " + k);
 					players.remove(players.get(k));
+					
+					System.out.println("i " + i);
+					players.remove(players.get(i));
+					
+
+					
 					i--;
 					break;
 					
@@ -65,5 +99,13 @@ public class CollisionDetector {
 		
 		
 		
+	}
+
+	public static List<ShotInfo> getShotInfos() {
+		return shotInfos;
+	}
+
+	public static void setShotInfos(List<ShotInfo> shotInfos) {
+		CollisionDetector.shotInfos = shotInfos;
 	}
 }
