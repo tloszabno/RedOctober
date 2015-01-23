@@ -16,3 +16,8 @@ var SHIP_TYPE = {
     Friendly:"Friendly",
     Enemy:"Enemy"
 };
+
+
+var TORPEDO_CONFIG={
+  torpedo_ratio: 7 // im większe tym szybciej będą latać torpedy, mnożnik pochodnych
+};

@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GameObject {
 
-	protected double x, y;
+	protected double x, y, sizeRadius;
 
-	public GameObject(double x, double y) {
+	public GameObject(double x, double y, double sizeRadius) {
 		this.x = x;
 		this.y = y;
+		this.sizeRadius = sizeRadius;
 	}
 
 	@JsonProperty("x")
@@ -28,4 +29,14 @@ public class GameObject {
 	public void setY(double y) {
 		this.y = y;
 	}
+
+	public double getSizeRadius() {
+		return sizeRadius;
+	}
+
+	public void setSizeRadius(double sizeRadius) {
+		this.sizeRadius = sizeRadius;
+	}
+	
+	
 }

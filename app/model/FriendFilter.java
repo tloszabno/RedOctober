@@ -2,8 +2,10 @@ package model;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import controllers.GameController;
 
 public class FriendFilter {
 	
@@ -55,15 +57,31 @@ public class FriendFilter {
 	public List<Torpedo> torpedoes(){
 		LinkedList<Torpedo> accepted = new LinkedList<Torpedo>();
 		for (Torpedo t : torpedoes) {
-			Player striker = findPlayerByName(t.getUserNick());
-			boolean isFriend = classifyPlayer(striker, Filter.FRIENDS);
-			if (isFriend){
-				accepted.add(t);
-			} else if (isNear(t, radar_range)){
-				accepted.add(t);
+			if( t.isMoving() ) {
+				Player striker = findPlayerByName(t.getUserNick());
+				boolean isFriend = striker != null ? classifyTorpedo(striker, Filter.FRIENDS) : false;
+				if (isFriend) {
+					accepted.add(t);
+				} else if (isNear(t, radar_range)) {
+					accepted.add(t);
+				}
 			}
 		}
 		return accepted;
+	}
+	
+	@JsonProperty("shots")
+	public List<ShotInfo> getShots(){
+		return CollisionDetector.getShotInfos();
+	}
+
+	@JsonProperty("teamsScore")
+	public List<ScoreDTO> getTeamsScore(){
+		List<ScoreDTO> scores = new LinkedList<ScoreDTO>();
+		for(Map.Entry<String, Integer> entry : GameController.getScore().entrySet()){
+			scores.add(new ScoreDTO(entry.getKey(), entry.getValue()));
+		}
+		return scores;
 	}
 
 	private Player findPlayerByName(String userNick) {
@@ -72,6 +90,7 @@ public class FriendFilter {
 				return p;
 			}
 		}
+		System.out.println("Cannot find user=" + userNick);
 		return null;
 	}
 
@@ -85,11 +104,25 @@ public class FriendFilter {
 		return result;
 	}
 
+	private boolean classifyTorpedo(Player p, Filter filter) {
+		return classify(p,filter, true);
+	}
+	
 	private boolean classifyPlayer(Player p, Filter filter) {
+		return classify(p,filter, false);
+	}
+	
+	private boolean classify(Player p, Filter filter, boolean isTorpedo) {
 		boolean isInMyTeam = p.getTeam().equalsIgnoreCase(my.getTeam());
 		boolean isNotMy = !p.equals(my);
 		boolean wantToGetFriends = filter==Filter.FRIENDS;
-		boolean classify = (wantToGetFriends == isInMyTeam)&&isNotMy;
+		boolean classify;
+		if (isTorpedo){
+			classify = (wantToGetFriends == isInMyTeam);	
+		} else {
+			classify = (wantToGetFriends == isInMyTeam)&&isNotMy&&(!p.getIsShot());
+		}
+		
 		return classify;
 	}
 	

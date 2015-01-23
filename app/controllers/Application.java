@@ -14,5 +14,7 @@ public class Application extends Controller {
         return ok(views.html.map.render(name, team));
     }
 
-
+    public static Result start(){
+        return ok(views.html.start.render());
+    }
 }

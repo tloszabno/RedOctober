@@ -25,6 +25,6 @@ public class TorpedoAdapter {
     }
     @JsonProperty("y_prim")
     public void setY_prim(double y_prim) {
-        torpedo.setDeltaX(y_prim);
+        torpedo.setDeltaY(y_prim);
     }
 }

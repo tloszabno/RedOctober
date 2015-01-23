@@ -3,6 +3,7 @@ package controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,6 +28,8 @@ public class GameController {
     private Board board;
     private ConcurrentLinkedQueue<Navigation> concurrentQueue;
     private TimeConfiguration timeconfig;
+	private static Map<String, Integer> score = new ConcurrentHashMap<String, Integer>();
+
 
 	private TorpedoRepository torpedoRepository = new TorpedoRepository();
     
@@ -34,7 +37,7 @@ public class GameController {
         system=ActorSystem.create("RedOctober");
         concurrentQueue = new ConcurrentLinkedQueue<Navigation>();
 		setPlayers(new PlayerRepository());
-        setSockets(new HashMap<TeamSocket, Player>());
+        setSockets(new ConcurrentHashMap<TeamSocket, Player>());
         setBoard(new Board());
         setQueue(getSystem().actorOf(Props.create(QueueActor.class,concurrentQueue), "queue"));
         timeconfig = new TimeConfiguration();
@@ -45,7 +48,6 @@ public class GameController {
 	public void disconnect(TeamSocket teamSocket) {
 		MovingObject player = sockets.get(teamSocket);
 		sockets.remove(teamSocket);
-		//System.out.println("disconnecting:" + player);
 		players.disconnectPlayer(player);
 		broadcast();
 	}
@@ -113,4 +115,26 @@ public class GameController {
 		return timeconfig.getRate()/1000.0;
 	}
 
+	public void updateScoreByKillerPlayer(Player killed, Player killer){
+		// punkty zdobywa drużyna killera
+		if( killed.getNick().equals(killer.getNick()) ){
+			return;
+		}
+
+		if( killed.getTeam().equals(killer.getTeam()) ){
+			return;
+		}
+
+		String team = killer.getTeam();
+		Integer teamScore = this.score.get(team);
+		if( teamScore != null ){
+			this.score.put(team, teamScore + 1 );
+		}else{
+			this.score.put(team, 1 );
+		}
+	}
+
+	public static Map<String, Integer> getScore() {
+		return score;
+	}
 }

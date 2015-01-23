@@ -3,6 +3,8 @@ package controllers;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import model.CollisionDetector;
 import model.Navigation;
 import model.Player;
 
@@ -12,11 +14,13 @@ private TimeConfiguration config;
 
 private ConcurrentLinkedQueue<Navigation> queue;
 private GameController controller;
+private CollisionDetector collisionDetector;
 
 	public Time(ConcurrentLinkedQueue<Navigation> queue, GameController controller, 
 			TimeConfiguration config){
 		this.queue = queue;
 		this.controller = controller;
+		collisionDetector = new CollisionDetector(controller);
 		this.config = config;
 	}
 	
@@ -33,8 +37,9 @@ private GameController controller;
             processNavigation(item);
 		}
 		controller.getTorpedoRepository().update(); // przesuwanie torped po mapie
-		controller.broadcast();
 		controller.getTorpedoRepository().removeExplodedTorpedoes();
+		collisionDetector.detectCollisions();
+		controller.broadcast();
 		/*
 			Jeśli kogoś zastanawia czemu update -> broadcast -> removeExplodedTorpedoes
 			Update - przesuwamy po mapie torpedy, może się zdarzyć, że któraś wybuchnie, ale nie możemy jej usunąć z pamięci, bo trzeba wysłać tę informację wszystkim

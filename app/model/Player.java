@@ -11,13 +11,15 @@ public class Player extends MovingObject{
 
 	private String nick;
 	private String team;
+	@JsonIgnore
+	private boolean isShot = false;
 	//private double xPosition, yPosition;
 	//private double xDirection, yDirection;
 	
 	//Możliwe że Player powinien rozszerzać MovingObject, ale wtedy w tym konstruktorze
 	//musiałyby być też przemieszczenia x i y łodzi
 	public Player(String nick, String team, double xPosition, double yPosition, double xDirection, double yDirection) {
-		super(xPosition, yPosition, xDirection, yDirection);
+		super(xPosition, yPosition, xDirection, yDirection, 30.0d);
 		this.nick = nick;
 		this.team = team;
 		//this.xPosition = xPosition;
@@ -81,4 +83,13 @@ public class Player extends MovingObject{
 		return "name:"+nick+" team:"+team;
 	}
 
+	@JsonProperty("is_shot")
+	public boolean getIsShot(){
+		return isShot;
+	}
+	
+	public void shot() {
+		isShot = true;
+	}
+	
 }

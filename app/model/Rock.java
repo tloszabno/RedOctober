@@ -2,11 +2,8 @@ package model;
 
 public class Rock extends GameObject {
 
-	private double sizeRadius = 15.0d;
-
-	public Rock(double x, double y, double sizeRadius) {
-		super(x, y);
-		this.sizeRadius = sizeRadius;
+	public Rock(double x, double y) {
+		super(x, y, 15.0d);
 	}
 
 	public double getSizeRadius() {

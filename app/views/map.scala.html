@@ -1,18 +1,39 @@
 @(name:String, team: String)
 @main(null){
 
-    <div id="position"/>
+<div class="container">
+    <h4>User: @name Team: @team</h4>
+
+</div>
+
+<div class="map" id="mapHolderId">
+
 
     <script src="@routes.Assets.at("javascripts/jquery.js")" type="text/javascript"></script>
-    <script src="@routes.Assets.at("javascripts/pixi.dev.js")" type="text/javascript"></script>
+            <script src="@routes.Assets.at("javascripts/pixi.dev.js")" type="text/javascript"></script>
     <script src="@routes.Assets.at("javascripts/ships_config.js")" type="text/javascript"></script>
+            <script src="@routes.Assets.at("javascripts/torpedo.js")" type="text/javascript"></script>
     <script src="@routes.Assets.at("javascripts/map.js")" type="text/javascript"></script>
-    <script src="@routes.Assets.at("javascripts/keys_codes.js")" type="text/javascript"></script>
+            <script src="@routes.Assets.at("javascripts/keys_codes.js")" type="text/javascript"></script>
     <script src="@routes.Assets.at("javascripts/controller.js")" type="text/javascript"></script>
-    <!--script src="@routes.Assets.at("javascripts/tests/control_test.js")" type="text/javascript"></script-->
-    <script src="@routes.Assets.at("javascripts/init.js")" type="text/javascript"></script>
+            <!--script src="@routes.Assets.at("javascripts/tests/control_test.js")" type="text/javascript"></script-->
+            <script src="@routes.Assets.at("javascripts/init.js")" type="text/javascript"></script>
 
-    <input type="hidden" id="userName" value="@name">
-    <input type="hidden" id="teamName" value="@team">
+</div>
+
+<div  class="stats">
+    <h5 id="fragCounterId">Killed: 0</h5>
+    <h5>Notifications:</h5>
+    <ul id="notificationsId">
+    </ul>
+    <br/>
+    <h5>Team statistics: (team, score)</h5>
+    <ul id="teamScoresId">
+    </ul>
+</div>
+
+<input type="hidden" id="userName" value="@name">
+<input type="hidden" id="teamName" value="@team">
 
 }
+        

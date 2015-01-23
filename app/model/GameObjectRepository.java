@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -11,14 +12,14 @@ public class GameObjectRepository {
 	//zrobilem 3 listy + czwarta zawierajaca wszystko
 	private List<GameObject> allObjects;
 	private List<Rock> rocks;
-	private List<Torpedo> torpedos;
-	private List<Player> players;
+	private List<MovingObject> torpedos;
+	private List<MovingObject> players;
 	
 	public GameObjectRepository() {
 		allObjects = new ArrayList<GameObject>();
 		rocks = new ArrayList<Rock>();
-		torpedos = new ArrayList<Torpedo>();
-		players = new ArrayList<Player>();
+		torpedos = new ArrayList<MovingObject>();
+		players = new ArrayList<MovingObject>();
 	}
 
 	public List<GameObject> getAllObjects() {
@@ -29,11 +30,11 @@ public class GameObjectRepository {
 		return rocks;
 	}
 
-	public List<Torpedo> getTorpedos() {
+	public List<MovingObject> getTorpedos() {
 		return torpedos;
 	}
 
-	public List<Player> getPlayers() {
+	public List<MovingObject> getPlayers() {
 		return players;
 	}
 	
@@ -62,6 +63,22 @@ public class GameObjectRepository {
 		if( object instanceof Player )
 			players.remove((MovingObject) object);
 	}
+	
+	public void update() {
+        for(MovingObject torpedo: torpedos)
+            torpedo.move();
+
+        for(MovingObject player: players)
+        	player.move();
+    }
+
+    public void removeExplodedTorpedoes() {
+        for(Iterator<MovingObject> iterator = torpedos.iterator(); iterator.hasNext();) {
+        	MovingObject torpedo = iterator.next();
+            if(!((Torpedo)torpedo).isMoving())
+                iterator.remove();
+        }
+    }
 }
 
 
