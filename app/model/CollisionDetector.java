@@ -73,7 +73,7 @@ public class CollisionDetector {
         }
 
         double distance = getDistanceBetween(player1, player2);
-        return distance <= 40;
+        return distance <= 20;
 
     }
 
@@ -99,7 +99,7 @@ public class CollisionDetector {
         }
 
         double distance = getDistanceBetween(torpedo, player);
-        return distance <= 40;
+        return distance <= 20;
     }
 
     private double getDistanceBetween(MovingObject obj1, MovingObject obj2) {
