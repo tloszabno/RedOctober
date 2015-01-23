@@ -120,6 +120,11 @@ public class GameController {
 		if( killed.getNick().equals(killer.getNick()) ){
 			return;
 		}
+
+		if( killed.getTeam().equals(killed.getTeam()) ){
+			return;
+		}
+
 		String team = killer.getTeam();
 		Integer teamScore = this.score.get(team);
 		if( teamScore != null ){
