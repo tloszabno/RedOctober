@@ -121,7 +121,7 @@ public class GameController {
 			return;
 		}
 
-		if( killed.getTeam().equals(killed.getTeam()) ){
+		if( killed.getTeam().equals(killer.getTeam()) ){
 			return;
 		}
 
